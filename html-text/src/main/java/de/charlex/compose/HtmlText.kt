@@ -30,7 +30,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.core.text.getSpans
 
-
 /**
  * Simple Text composable to show the text with html styling from string resources.
  * Supported are:
