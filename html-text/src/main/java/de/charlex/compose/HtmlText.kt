@@ -155,7 +155,6 @@ fun HtmlText(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current
 ) {
-    val context = LocalContext.current
     val annotatedString = if(SDK_INT<24){
         Html.fromHtml(text)
     } else {
