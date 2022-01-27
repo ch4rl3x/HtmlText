@@ -209,38 +209,7 @@ fun CharSequence.toAnnotatedString(
     )
 ): AnnotatedString {
     return if (this is Spanned) {
-        buildAnnotatedString {
-            append(this@toAnnotatedString.toString())
-            val urlSpans = getSpans<URLSpan>()
-            val styleSpans = getSpans<StyleSpan>()
-            val underlineSpans = getSpans<UnderlineSpan>()
-            val strikethroughSpans = getSpans<StrikethroughSpan>()
-            urlSpans.forEach { urlSpan ->
-                val start = getSpanStart(urlSpan)
-                val end = getSpanEnd(urlSpan)
-                addStyle(urlSpanStyle, start, end)
-                addStringAnnotation("url", urlSpan.url, start, end) // NON-NLS
-            }
-            styleSpans.forEach { styleSpan ->
-                val start = getSpanStart(styleSpan)
-                val end = getSpanEnd(styleSpan)
-                when (styleSpan.style) {
-                    Typeface.BOLD -> addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, end)
-                    Typeface.ITALIC -> addStyle(SpanStyle(fontStyle = FontStyle.Italic), start, end)
-                    Typeface.BOLD_ITALIC -> addStyle(SpanStyle(fontWeight = FontWeight.Bold, fontStyle = FontStyle.Italic), start, end)
-                }
-            }
-            underlineSpans.forEach { underlineSpan ->
-                val start = getSpanStart(underlineSpan)
-                val end = getSpanEnd(underlineSpan)
-                addStyle(SpanStyle(textDecoration = TextDecoration.Underline), start, end)
-            }
-            strikethroughSpans.forEach { strikethroughSpan ->
-                val start = getSpanStart(strikethroughSpan)
-                val end = getSpanEnd(strikethroughSpan)
-                addStyle(SpanStyle(textDecoration = TextDecoration.LineThrough), start, end)
-            }
-        }
+        this.toAnnotatedString(urlSpanStyle)
     } else {
         buildAnnotatedString {
             append(this@toAnnotatedString.toString())
@@ -285,5 +254,7 @@ fun Spanned.toAnnotatedString(urlSpanStyle: SpanStyle = SpanStyle(
         }
     }
 }
+
+
 
 
