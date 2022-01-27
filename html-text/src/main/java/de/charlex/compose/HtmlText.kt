@@ -155,10 +155,10 @@ fun HtmlText(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current
 ) {
-    val annotatedString = if(SDK_INT<24){
+    val annotatedString = if (SDK_INT <24) {
         Html.fromHtml(text)
     } else {
-        Html.fromHtml(text,Html.FROM_HTML_MODE_LEGACY)
+        Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
     }.toAnnotatedString(urlSpanStyle)
 
     val uriHandler = LocalUriHandler.current
@@ -216,10 +216,12 @@ fun CharSequence.toAnnotatedString(
     }
 }
 
-fun Spanned.toAnnotatedString(urlSpanStyle: SpanStyle = SpanStyle(
-    color = Color.Blue,
-    textDecoration = TextDecoration.Underline
-)) : AnnotatedString {
+fun Spanned.toAnnotatedString(
+    urlSpanStyle: SpanStyle = SpanStyle(
+color = Color.Blue,
+textDecoration = TextDecoration.Underline
+)
+): AnnotatedString {
     return buildAnnotatedString {
         append(this@toAnnotatedString.toString())
         val urlSpans = getSpans<URLSpan>()
@@ -253,7 +255,3 @@ fun Spanned.toAnnotatedString(urlSpanStyle: SpanStyle = SpanStyle(
         }
     }
 }
-
-
-
-
