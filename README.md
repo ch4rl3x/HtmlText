@@ -17,7 +17,7 @@ Add actual HtmlText library:
 
 ```groovy
 dependencies {
-    implementation 'de.charlex.compose:html-text:1.0.0'
+    implementation 'de.charlex.compose:html-text:1.1.0'
 }
 ```
 
