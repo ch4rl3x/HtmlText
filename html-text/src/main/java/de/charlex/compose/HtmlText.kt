@@ -8,6 +8,7 @@ import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.text.style.UnderlineSpan
+import android.text.style.ForegroundColorSpan
 import androidx.annotation.StringRes
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.text.InlineTextContent
@@ -218,14 +219,15 @@ fun CharSequence.toAnnotatedString(
 
 fun Spanned.toAnnotatedString(
     urlSpanStyle: SpanStyle = SpanStyle(
-color = Color.Blue,
-textDecoration = TextDecoration.Underline
-)
+        color = Color.Blue,
+        textDecoration = TextDecoration.Underline
+    )
 ): AnnotatedString {
     return buildAnnotatedString {
         append(this@toAnnotatedString.toString())
         val urlSpans = getSpans<URLSpan>()
         val styleSpans = getSpans<StyleSpan>()
+        val colorSpans = getSpans<ForegroundColorSpan>()
         val underlineSpans = getSpans<UnderlineSpan>()
         val strikethroughSpans = getSpans<StrikethroughSpan>()
         urlSpans.forEach { urlSpan ->
@@ -233,6 +235,11 @@ textDecoration = TextDecoration.Underline
             val end = getSpanEnd(urlSpan)
             addStyle(urlSpanStyle, start, end)
             addStringAnnotation("url", urlSpan.url, start, end) // NON-NLS
+        }
+        colorSpans.forEach { colorSpan ->
+            val start = getSpanStart(colorSpan)
+            val end = getSpanEnd(colorSpan)
+            addStyle(SpanStyle(color = Color(colorSpan.foregroundColor)), start, end)
         }
         styleSpans.forEach { styleSpan ->
             val start = getSpanStart(styleSpan)

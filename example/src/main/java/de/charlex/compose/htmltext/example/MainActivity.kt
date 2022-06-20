@@ -6,8 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +21,7 @@ class MainActivity : ComponentActivity() {
                 Column(Modifier.background(color = MaterialTheme.colors.background)) {
                     Greeting()
                     StringGreeting()
+                    ColorText()
                 }
             }
         }
@@ -37,6 +36,11 @@ fun Greeting() {
 @Composable
 fun StringGreeting(){
     HtmlText(text = "Hello <b>World</b>. This <i><strike>text</strike>sentence</i> is form<b>att<u>ed</u></b> in simple html. <a href=\"https://github.com/ch4rl3x/HtmlText\">HtmlText</a>")
+}
+
+@Composable
+fun ColorText() {
+    HtmlText(text = "Hello <span style=\"color: #00FFFF\">blue</span> world")
 }
 
 @Preview(showBackground = true)
