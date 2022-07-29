@@ -30,9 +30,9 @@ jobs:
       - name: Release build
         run: ./gradlew assembleRelease
 
-        # Generates other artifacts
-      - name: Source jar and dokka
-        run: ./gradlew androidSourcesJar
+#        # Generates other artifacts
+#      - name: Source jar and dokka
+#        run: ./gradlew androidSourcesJar
 
         # Runs upload, and then closes & releases the repository
       - name: Publish to MavenCentral
