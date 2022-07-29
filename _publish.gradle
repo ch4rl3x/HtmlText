@@ -1,23 +1,6 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-//task androidSourcesJar(type: Jar) {
-//    archiveClassifier.set('sources')
-//    if (project.plugins.findPlugin("com.android.library")) {
-//        // For Android libraries
-//        from android.sourceSets.main.java.srcDirs
-//        from android.sourceSets.main.kotlin.srcDirs
-//    } else {
-//        // For pure Kotlin libraries, in case you have them
-//        from sourceSets.main.java.srcDirs
-//        from sourceSets.main.kotlin.srcDirs
-//    }
-//}
-
-//artifacts {
-//    archives androidSourcesJar
-//}
-
 group = PUBLISH_GROUP_ID
 version = PUBLISH_VERSION
 
@@ -65,14 +48,6 @@ publishing {
                 from components.release
             }
 
-//            // Two artifacts, the `aar` (or `jar`) and the sources
-//            if (project.plugins.findPlugin("com.android.library")) {
-//                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-//            } else {
-//                artifact("$buildDir/libs/${project.getName()}-${version}.jar")
-//            }
-//            artifact androidSourcesJar
-
             // Mostly self-explanatory metadata
             pom {
                 name = PUBLISH_ARTIFACT_ID
@@ -97,18 +72,6 @@ publishing {
                     connection = 'scm:git:github.com/ch4rl3x/HtmlText.git'
                     developerConnection = 'scm:git:ssh://github.com/ch4rl3x/HtmlText.git'
                     url = 'https://github.com/ch4rl3x/HtmlText/tree/main'
-                }
-                // A slightly hacky fix so that your POM will include any transitive dependencies
-                // that your library builds upon
-                withXml {
-                    def dependenciesNode = asNode().appendNode('dependencies')
-
-                    project.configurations.implementation.allDependencies.each {
-                        def dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', it.group)
-                        dependencyNode.appendNode('artifactId', it.name)
-                        dependencyNode.appendNode('version', it.version)
-                    }
                 }
             }
         }
