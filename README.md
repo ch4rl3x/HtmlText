@@ -8,13 +8,47 @@ Text composable to show html text from resources
 &lt;b> - <b>Bold text</b><br>
 &lt;i> - <i>Italic text</i><br>
 &lt;strike> - <strike>Striked text</strike><br>
-&lt;u> - <u>Underlined text</u><br>
-&lt;a href=""> - Link<br>
-&lt;span style="color: #0000FF"> - Colored text<br>
-&lt;span style="color: red"> - Colored text<br>
-&lt;font color="#FF0000"> - Colored text<br>
-&lt;font color="red"> - Colored text<br><br>
+&lt;u> - <u>Underlined text</u> (Markdown does not allow a preview here)<br> 
+&lt;a href="..."> - <a href="https://github.com/ch4rl3x/HtmlText">Link</a><br>
+&lt;span style="color: #0000FF"> - Colored text (Markdown does not allow a preview here)<br>
+&lt;span style="color: red"> - Colored text (Markdown does not allow a preview here)<br>
+&lt;font color="#FF0000"> - Colored text (Markdown does not allow a preview here)<br>
+&lt;font color="red"> - Colored text (Markdown does not allow a preview here)<br><br>
 
+## MaterialTheme colors in HtmlText
+To use colors like `MaterialTheme.colors.primary` in `HtmlText`, map simple colors.
+```kotlin
+HtmlText(
+    textId = R.string.hello_world,
+    colorMapping = mapOf(Color.Red to MaterialTheme.colors.primary)
+)
+```
+```xml
+<resources>
+    <string name="hello_world">"Hello <span style="color: red">World</span>"</string>
+</resources>
+```
+
+## String arguments in HtmlText
+To use string arguments with `HtmlText`, use CDATA
+```kotlin
+HtmlText(
+    text = stringResource(R.string.hello_world, "Hello")
+)
+```
+```xml
+<resources>
+    <string name="hello_world"><![CDATA[%1$s World]]></string>
+</resources>
+```
+
+## Combine MaterialTheme colors and string arguments in HtmlText
+You can combine colorMapping with string arguments (CDATA) and all other HTML tags. If you use CDATA, you have to escape double quotes.
+```xml
+<resources>
+    <string name="hello_world"><![CDATA[Hello <span style=\"color: red\">World</span>]]></string>
+</resources>
+```
 
 <a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ALint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Lint/badge.svg" alt="Lint"></a>
 <a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3AKtlint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Ktlint/badge.svg" alt="Ktlint"></a>
