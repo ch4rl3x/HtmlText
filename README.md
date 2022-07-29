@@ -1,19 +1,20 @@
 # HtmlText
-## Current Compose Version: 1.0.3
+## Current Compose Version: 1.2.0
 Compose HtmlText
 
 Text composable to show html text from resources
 
-Supported Tags:
-<b>
-<i>
-<strike>
-<u>
-<a href="">
-<span style="color: #0000FF">
-<span style="color: red">
-<font color="#FF0000">
-<font color="red">
+**Supported Tags:**<br>
+&lt;b> - <b>Bold text</b><br>
+&lt;i> - <i>Italic text</i><br>
+&lt;strike> - <strike>Striked text</strike><br>
+&lt;u> - <u>Underlined text</u><br>
+&lt;a href=""> - Link<br>
+&lt;span style="color: #0000FF"> - Colored text<br>
+&lt;span style="color: red"> - Colored text<br>
+&lt;font color="#FF0000"> - Colored text<br>
+&lt;font color="red"> - Colored text<br><br>
+
 
 <a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ALint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Lint/badge.svg" alt="Lint"></a>
 <a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3AKtlint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Ktlint/badge.svg" alt="Ktlint"></a>
@@ -28,7 +29,7 @@ Add actual HtmlText library:
 
 ```groovy
 dependencies {
-    implementation 'de.charlex.compose:html-text:1.1.0'
+    implementation 'de.charlex.compose:html-text:1.2.0'
 }
 ```
 
