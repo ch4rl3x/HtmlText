@@ -57,6 +57,7 @@ fun HtmlText(
     urlSpanStyle: SpanStyle = SpanStyle(
         color = MaterialTheme.colors.secondary,
         textDecoration = TextDecoration.Underline),
+    colorMapping: Map<Color, Color> = emptyMap(),
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -74,7 +75,7 @@ fun HtmlText(
     style: TextStyle = LocalTextStyle.current
 ) {
     val context = LocalContext.current
-    val annotatedString = context.resources.getText(textId).toAnnotatedString(urlSpanStyle)
+    val annotatedString = context.resources.getText(textId).toAnnotatedString(urlSpanStyle, colorMapping)
 
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -140,6 +141,7 @@ fun HtmlText(
     urlSpanStyle: SpanStyle = SpanStyle(
         color = MaterialTheme.colors.secondary,
         textDecoration = TextDecoration.Underline),
+    colorMapping: Map<Color, Color> = emptyMap(),
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -160,7 +162,7 @@ fun HtmlText(
         Html.fromHtml(text)
     } else {
         Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
-    }.toAnnotatedString(urlSpanStyle)
+    }.toAnnotatedString(urlSpanStyle, colorMapping)
 
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -206,10 +208,11 @@ fun CharSequence.toAnnotatedString(
     urlSpanStyle: SpanStyle = SpanStyle(
         color = Color.Blue,
         textDecoration = TextDecoration.Underline
-    )
+    ),
+    colorMapping: Map<Color, Color> = emptyMap()
 ): AnnotatedString {
     return if (this is Spanned) {
-        this.toAnnotatedString(urlSpanStyle)
+        this.toAnnotatedString(urlSpanStyle, colorMapping)
     } else {
         buildAnnotatedString {
             append(this@toAnnotatedString.toString())
@@ -221,7 +224,8 @@ fun Spanned.toAnnotatedString(
     urlSpanStyle: SpanStyle = SpanStyle(
         color = Color.Blue,
         textDecoration = TextDecoration.Underline
-    )
+    ),
+    colorMapping: Map<Color, Color> = emptyMap()
 ): AnnotatedString {
     return buildAnnotatedString {
         append(this@toAnnotatedString.toString())
@@ -239,7 +243,7 @@ fun Spanned.toAnnotatedString(
         colorSpans.forEach { colorSpan ->
             val start = getSpanStart(colorSpan)
             val end = getSpanEnd(colorSpan)
-            addStyle(SpanStyle(color = Color(colorSpan.foregroundColor)), start, end)
+            addStyle(SpanStyle(color = colorMapping.getOrElse(Color(colorSpan.foregroundColor)) { Color(colorSpan.foregroundColor) }), start, end)
         }
         styleSpans.forEach { styleSpan ->
             val start = getSpanStart(styleSpan)

@@ -15,12 +15,12 @@ ext {
 apply from: '../_publish.gradle'
 
 android {
-    compileSdk 30
+    compileSdk 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         minSdk 21
-        targetSdk 30
+        targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,13 +40,20 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'de.charlex.compose'
 
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
     }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "androidx.core:core-ktx:1.8.0"
 }

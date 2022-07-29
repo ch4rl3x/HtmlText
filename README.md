@@ -4,6 +4,17 @@ Compose HtmlText
 
 Text composable to show html text from resources
 
+Supported Tags:
+<b>
+<i>
+<strike>
+<u>
+<a href="">
+<span style="color: #0000FF">
+<span style="color: red">
+<font color="#FF0000">
+<font color="red">
+
 <a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ALint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Lint/badge.svg" alt="Lint"></a>
 <a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3AKtlint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Ktlint/badge.svg" alt="Ktlint"></a>
 

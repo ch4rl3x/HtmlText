@@ -6,8 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import de.charlex.compose.HtmlText
 import de.charlex.compose.htmltext.example.ui.theme.HtmlTextTheme
@@ -21,7 +23,9 @@ class MainActivity : ComponentActivity() {
                 Column(Modifier.background(color = MaterialTheme.colors.background)) {
                     Greeting()
                     StringGreeting()
-                    ColorText()
+                    ColorTextBySpan()
+                    ColorTextByFont()
+                    ColorTextWithColorMapping()
                 }
             }
         }
@@ -39,8 +43,38 @@ fun StringGreeting(){
 }
 
 @Composable
-fun ColorText() {
-    HtmlText(text = "Hello <span style=\"color: #00FFFF\">blue</span> world")
+fun ColorTextBySpan() {
+    HtmlText(text = "Hello <span style=\"color: #0000FF\">blue</span> world")
+}
+
+@Composable
+fun ColorTextByFont() {
+    HtmlText(text = "Hello <font color=\"red\">red</font> world")
+}
+
+@Composable
+fun ColorTextWithColorMapping() {
+    HtmlTextTheme(
+        darkTheme = false
+    ) {
+        Surface {
+            HtmlText(
+                text = "Hello <font color=\"red\">red</font> world",
+                colorMapping = mapOf(Color.Red to MaterialTheme.colors.primary)
+            )
+        }
+    }
+
+    HtmlTextTheme(
+        darkTheme = true
+    ) {
+        Surface {
+            HtmlText(
+                text = "Hello <font color=\"red\">red</font> world",
+                colorMapping = mapOf(Color.Red to MaterialTheme.colors.primary)
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
