@@ -76,12 +76,13 @@ fun HtmlText(
 ) {
     val context = LocalContext.current
     val annotatedString = context.resources.getText(textId).toAnnotatedString(urlSpanStyle, colorMapping)
+    val clickable = annotatedString.getStringAnnotations(0, annotatedString.length-1).any { it.tag == "url" }
 
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
 
     Text(
-        modifier = modifier.pointerInput(Unit) {
+        modifier = modifier.then(if(clickable) Modifier.pointerInput(Unit) {
             detectTapGestures(onTap = { pos ->
                 layoutResult.value?.let { layoutResult ->
                     val position = layoutResult.getOffsetForPosition(pos)
@@ -94,7 +95,7 @@ fun HtmlText(
                         }
                 }
             })
-        },
+        } else Modifier),
         text = annotatedString,
         color = color,
         fontSize = fontSize,
@@ -164,11 +165,13 @@ fun HtmlText(
         Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
     }.toAnnotatedString(urlSpanStyle, colorMapping)
 
+    val clickable = annotatedString.getStringAnnotations(0, annotatedString.length-1).any { it.tag == "url" }
+
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
 
     Text(
-        modifier = modifier.pointerInput(Unit) {
+        modifier = modifier.then(if(clickable) Modifier.pointerInput(Unit) {
             detectTapGestures(onTap = { pos ->
                 layoutResult.value?.let { layoutResult ->
                     val position = layoutResult.getOffsetForPosition(pos)
@@ -181,7 +184,7 @@ fun HtmlText(
                         }
                 }
             })
-        },
+        } else Modifier),
         text = annotatedString,
         color = color,
         fontSize = fontSize,
