@@ -26,6 +26,7 @@ class MainActivity : ComponentActivity() {
                     ColorTextBySpan()
                     ColorTextByFont()
                     ColorTextWithColorMapping()
+                    MultipleLinks()
                 }
             }
         }
@@ -40,6 +41,11 @@ fun Greeting() {
 @Composable
 fun StringGreeting(){
     HtmlText(text = "Hello <b>World</b>. This <i><strike>text</strike>sentence</i> is form<b>att<u>ed</u></b> in simple html. <a href=\"https://github.com/ch4rl3x/HtmlText\">HtmlText</a>")
+}
+
+@Composable
+fun MultipleLinks(){
+    HtmlText(text = "<a href=\"https://github.com/ch4rl3x/HtmlText\">HtmlText</a> by <a href=\"https://github.com/ch4rl3x\">ch4rl3x</a>")
 }
 
 @Composable

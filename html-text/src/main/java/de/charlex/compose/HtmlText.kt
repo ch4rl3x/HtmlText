@@ -4,11 +4,11 @@ import android.graphics.Typeface
 import android.os.Build.VERSION.SDK_INT
 import android.text.Html
 import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.text.style.UnderlineSpan
-import android.text.style.ForegroundColorSpan
 import androidx.annotation.StringRes
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.text.InlineTextContent
@@ -23,7 +23,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.*
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -76,27 +86,10 @@ fun HtmlText(
 ) {
     val context = LocalContext.current
     val annotatedString = context.resources.getText(textId).toAnnotatedString(urlSpanStyle, colorMapping)
-    val clickable = annotatedString.getStringAnnotations(0, annotatedString.length - 1).any { it.tag == "url" }
 
-    val uriHandler = LocalUriHandler.current
-    val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
-
-    Text(
-        modifier = modifier.then(if (clickable) Modifier.pointerInput(Unit) {
-            detectTapGestures(onTap = { pos ->
-                layoutResult.value?.let { layoutResult ->
-                    val position = layoutResult.getOffsetForPosition(pos)
-                    annotatedString.getStringAnnotations(position, position)
-                        .firstOrNull()
-                        ?.let { sa ->
-                            if (sa.tag == "url") { // NON-NLS
-                                uriHandler.openUri(sa.item)
-                            }
-                        }
-                }
-            })
-        } else Modifier),
-        text = annotatedString,
+    HtmlText(
+        modifier = modifier,
+        annotatedString = annotatedString,
         color = color,
         fontSize = fontSize,
         fontStyle = fontStyle,
@@ -110,10 +103,7 @@ fun HtmlText(
         softWrap = softWrap,
         maxLines = maxLines,
         inlineContent = inlineContent,
-        onTextLayout = {
-            layoutResult.value = it
-            onTextLayout(it)
-        },
+        onTextLayout = onTextLayout,
         style = style
     )
 }
@@ -165,10 +155,73 @@ fun HtmlText(
         Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
     }.toAnnotatedString(urlSpanStyle, colorMapping)
 
-    val clickable = annotatedString.getStringAnnotations(0, annotatedString.length - 1).any { it.tag == "url" }
+    HtmlText(
+        modifier = modifier,
+        annotatedString = annotatedString,
+        color = color,
+        fontSize = fontSize,
+        fontStyle = fontStyle,
+        fontWeight = fontWeight,
+        fontFamily = fontFamily,
+        letterSpacing = letterSpacing,
+        textDecoration = textDecoration,
+        textAlign = textAlign,
+        lineHeight = lineHeight,
+        overflow = overflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        inlineContent = inlineContent,
+        onTextLayout = onTextLayout,
+        style = style
+    )
+}
+
+/**
+ * Simple Text composable to show the text with html styling from a String.
+ * Supported are:
+ *
+ * &lt;b>Bold&lt;/b>
+ *
+ * &lt;i>Italic&lt;/i>
+ *
+ * &lt;u>Underlined&lt;/u>
+ *
+ * &lt;strike>Strikethrough&lt;/strike>
+ *
+ * &lt;a href="https://google.de">Link&lt;/a>
+ *
+ * @see androidx.compose.material.Text
+ *
+ */
+@Composable
+fun HtmlText(
+    modifier: Modifier,
+    annotatedString: AnnotatedString,
+    color: Color,
+    fontSize: TextUnit,
+    fontStyle: FontStyle?,
+    fontWeight: FontWeight?,
+    fontFamily: FontFamily?,
+    letterSpacing: TextUnit,
+    textDecoration: TextDecoration?,
+    textAlign: TextAlign?,
+    lineHeight: TextUnit,
+    overflow: TextOverflow,
+    softWrap: Boolean,
+    maxLines: Int,
+    inlineContent: Map<String, InlineTextContent>,
+    onTextLayout: (TextLayoutResult) -> Unit,
+    style: TextStyle
+) {
+    val clickable =
+        annotatedString.getStringAnnotations(0, annotatedString.length - 1).any { it.tag == "url" }
 
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
+
+    val urls = remember(layoutResult, annotatedString) {
+        annotatedString.getStringAnnotations("url", 0, annotatedString.lastIndex)
+    }
 
     Text(
         modifier = modifier.then(if (clickable) Modifier.pointerInput(Unit) {
@@ -184,6 +237,21 @@ fun HtmlText(
                         }
                 }
             })
+        }.semantics {
+            if (urls.size == 1) {
+                role = Role.Button
+                onClick("Link (${annotatedString.substring(urls[0].start, urls[0].end)}") {
+                    uriHandler.openUri(urls[0].item)
+                    true
+                }
+            } else {
+                customActions = urls.map {
+                    CustomAccessibilityAction("Link (${annotatedString.substring(it.start, it.end)})") {
+                        uriHandler.openUri(it.item)
+                        true
+                    }
+                }
+            }
         } else Modifier),
         text = annotatedString,
         color = color,
