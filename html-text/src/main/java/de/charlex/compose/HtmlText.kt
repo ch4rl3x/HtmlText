@@ -195,23 +195,23 @@ fun HtmlText(
  */
 @Composable
 fun HtmlText(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     annotatedString: AnnotatedString,
-    color: Color,
-    fontSize: TextUnit,
-    fontStyle: FontStyle?,
-    fontWeight: FontWeight?,
-    fontFamily: FontFamily?,
-    letterSpacing: TextUnit,
-    textDecoration: TextDecoration?,
-    textAlign: TextAlign?,
-    lineHeight: TextUnit,
-    overflow: TextOverflow,
-    softWrap: Boolean,
-    maxLines: Int,
-    inlineContent: Map<String, InlineTextContent>,
-    onTextLayout: (TextLayoutResult) -> Unit,
-    style: TextStyle
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontStyle: FontStyle? = null,
+    fontWeight: FontWeight? = null,
+    fontFamily: FontFamily? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified,
+    textDecoration: TextDecoration? = null,
+    textAlign: TextAlign? = null,
+    lineHeight: TextUnit = TextUnit.Unspecified,
+    overflow: TextOverflow = TextOverflow.Clip,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    inlineContent: Map<String, InlineTextContent> = mapOf(),
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    style: TextStyle = LocalTextStyle.current
 ) {
     val clickable =
         annotatedString.getStringAnnotations(0, annotatedString.length - 1).any { it.tag == "url" }
