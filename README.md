@@ -1,6 +1,9 @@
 # HtmlText
-## Current Compose Version: 1.2.0
-Compose HtmlText
+
+<a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ALint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Lint/badge.svg" alt="Lint"></a>
+<a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3AKtlint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Ktlint/badge.svg" alt="Ktlint"></a>
+<a href="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText"><img src="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText/badge" alt="CodeFactor" /></a>
+<a href="https://repo1.maven.org/maven2/de/charlex/compose/html-text/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose/html-text" alt="Maven Central" /></a>
 
 Text composable to show html text from resources
 
@@ -50,11 +53,6 @@ You can combine colorMapping with string arguments (CDATA) and all other HTML ta
 </resources>
 ```
 
-<a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ALint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Lint/badge.svg" alt="Lint"></a>
-<a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3AKtlint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Ktlint/badge.svg" alt="Ktlint"></a>
-
-<a href="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText"><img src="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText/badge" alt="CodeFactor" /></a>
-<a href="https://repo1.maven.org/maven2/de/charlex/compose/html-text/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose/html-text" alt="Maven Central" /></a>
 
 
 # Add to your project
