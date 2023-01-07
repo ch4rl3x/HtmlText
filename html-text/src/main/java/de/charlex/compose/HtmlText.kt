@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.customActions
@@ -147,7 +148,8 @@ fun HtmlText(
     maxLines: Int = Int.MAX_VALUE,
     inlineContent: Map<String, InlineTextContent> = mapOf(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
+    onOpenUri: (label: String, uri: String, uriHandler: UriHandler) -> Unit = { _, uri, uriHandler -> uriHandler.openUri(uri)},
 ) {
     val annotatedString = if (SDK_INT <24) {
         Html.fromHtml(text)
@@ -172,7 +174,8 @@ fun HtmlText(
         maxLines = maxLines,
         inlineContent = inlineContent,
         onTextLayout = onTextLayout,
-        style = style
+        style = style,
+        onOpenUri = onOpenUri
     )
 }
 
@@ -211,7 +214,8 @@ fun HtmlText(
     maxLines: Int = Int.MAX_VALUE,
     inlineContent: Map<String, InlineTextContent> = mapOf(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
+    onOpenUri: (label: String, uri: String, uriHandler: UriHandler) -> Unit = { _, uri, uriHandler -> uriHandler.openUri(uri)},
 ) {
     val clickable =
         annotatedString.getStringAnnotations(0, annotatedString.length - 1).any { it.tag == "url" }
@@ -232,7 +236,11 @@ fun HtmlText(
                         .firstOrNull()
                         ?.let { sa ->
                             if (sa.tag == "url") { // NON-NLS
-                                uriHandler.openUri(sa.item)
+                                onOpenUri.invoke(
+                                    annotatedString.substring(sa.start, sa.end),
+                                    sa.item,
+                                    uriHandler
+                                )
                             }
                         }
                 }
@@ -240,14 +248,24 @@ fun HtmlText(
         }.semantics {
             if (urls.size == 1) {
                 role = Role.Button
-                onClick("Link (${annotatedString.substring(urls[0].start, urls[0].end)}") {
-                    uriHandler.openUri(urls[0].item)
+                val label = annotatedString.substring(urls[0].start, urls[0].end)
+                onClick("Link ($label)") {
+                    onOpenUri.invoke(
+                        label,
+                        urls[0].item,
+                        uriHandler
+                    )
                     true
                 }
             } else {
                 customActions = urls.map {
-                    CustomAccessibilityAction("Link (${annotatedString.substring(it.start, it.end)})") {
-                        uriHandler.openUri(it.item)
+                    val label = annotatedString.substring(it.start, it.end)
+                    CustomAccessibilityAction("Link ($label)") {
+                        onOpenUri.invoke(
+                            label,
+                            it.item,
+                            uriHandler
+                        )
                         true
                     }
                 }
