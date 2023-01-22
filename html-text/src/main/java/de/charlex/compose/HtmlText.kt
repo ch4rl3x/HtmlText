@@ -149,7 +149,7 @@ fun HtmlText(
     inlineContent: Map<String, InlineTextContent> = mapOf(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
-    onOpenUri: (label: String, uri: String, uriHandler: UriHandler) -> Unit = { _, uri, uriHandler -> uriHandler.openUri(uri)},
+    onLinkClicked: ((label: String, uri: String) -> Unit)? = null,
 ) {
     val annotatedString = if (SDK_INT <24) {
         Html.fromHtml(text)
@@ -175,7 +175,7 @@ fun HtmlText(
         inlineContent = inlineContent,
         onTextLayout = onTextLayout,
         style = style,
-        onOpenUri = onOpenUri
+        onLinkClicked = onLinkClicked
     )
 }
 
@@ -215,7 +215,7 @@ fun HtmlText(
     inlineContent: Map<String, InlineTextContent> = mapOf(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
-    onOpenUri: (label: String, uri: String, uriHandler: UriHandler) -> Unit = { _, uri, uriHandler -> uriHandler.openUri(uri)},
+    onLinkClicked: ((label: String, uri: String) -> Unit)? = null,
 ) {
     val clickable =
         annotatedString.getStringAnnotations(0, annotatedString.length - 1).any { it.tag == "url" }
@@ -236,11 +236,10 @@ fun HtmlText(
                         .firstOrNull()
                         ?.let { sa ->
                             if (sa.tag == "url") { // NON-NLS
-                                onOpenUri.invoke(
+                                onLinkClicked?.invoke(
                                     annotatedString.substring(sa.start, sa.end),
-                                    sa.item,
-                                    uriHandler
-                                )
+                                    sa.item
+                                ) ?: uriHandler.openUri(sa.item)
                             }
                         }
                 }
@@ -250,22 +249,20 @@ fun HtmlText(
                 role = Role.Button
                 val label = annotatedString.substring(urls[0].start, urls[0].end)
                 onClick("Link ($label)") {
-                    onOpenUri.invoke(
+                    onLinkClicked?.invoke(
                         label,
-                        urls[0].item,
-                        uriHandler
-                    )
+                        urls[0].item
+                    ) ?: uriHandler.openUri(urls[0].item)
                     true
                 }
             } else {
                 customActions = urls.map {
                     val label = annotatedString.substring(it.start, it.end)
                     CustomAccessibilityAction("Link ($label)") {
-                        onOpenUri.invoke(
+                        onLinkClicked?.invoke(
                             label,
-                            it.item,
-                            uriHandler
-                        )
+                            it.item
+                        ) ?: uriHandler.openUri(it.item)
                         true
                     }
                 }
