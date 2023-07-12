@@ -66,7 +66,8 @@ fun HtmlText(
     @StringRes textId: Int,
     urlSpanStyle: SpanStyle = SpanStyle(
         color = MaterialTheme.colors.secondary,
-        textDecoration = TextDecoration.Underline),
+        textDecoration = TextDecoration.Underline
+    ),
     colorMapping: Map<Color, Color> = emptyMap(),
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -82,7 +83,8 @@ fun HtmlText(
     maxLines: Int = Int.MAX_VALUE,
     inlineContent: Map<String, InlineTextContent> = mapOf(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
+    onUriClick: ((String) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val annotatedString = context.resources.getText(textId).toAnnotatedString(urlSpanStyle, colorMapping)
@@ -104,7 +106,8 @@ fun HtmlText(
         maxLines = maxLines,
         inlineContent = inlineContent,
         onTextLayout = onTextLayout,
-        style = style
+        style = style,
+        onUriClick = onUriClick
     )
 }
 
@@ -131,7 +134,8 @@ fun HtmlText(
     text: String,
     urlSpanStyle: SpanStyle = SpanStyle(
         color = MaterialTheme.colors.secondary,
-        textDecoration = TextDecoration.Underline),
+        textDecoration = TextDecoration.Underline
+    ),
     colorMapping: Map<Color, Color> = emptyMap(),
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -147,9 +151,10 @@ fun HtmlText(
     maxLines: Int = Int.MAX_VALUE,
     inlineContent: Map<String, InlineTextContent> = mapOf(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
+    onUriClick: ((String) -> Unit)? = null,
 ) {
-    val annotatedString = if (SDK_INT <24) {
+    val annotatedString = if (SDK_INT < 24) {
         Html.fromHtml(text)
     } else {
         Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
@@ -172,7 +177,8 @@ fun HtmlText(
         maxLines = maxLines,
         inlineContent = inlineContent,
         onTextLayout = onTextLayout,
-        style = style
+        style = style,
+        onUriClick = onUriClick
     )
 }
 
@@ -211,7 +217,8 @@ fun HtmlText(
     maxLines: Int = Int.MAX_VALUE,
     inlineContent: Map<String, InlineTextContent> = mapOf(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
+    onUriClick: ((String) -> Unit)? = null,
 ) {
     val clickable =
         annotatedString.getStringAnnotations(0, annotatedString.length - 1).any { it.tag == "url" }
@@ -224,35 +231,41 @@ fun HtmlText(
     }
 
     Text(
-        modifier = modifier.then(if (clickable) Modifier.pointerInput(Unit) {
-            detectTapGestures(onTap = { pos ->
-                layoutResult.value?.let { layoutResult ->
-                    val position = layoutResult.getOffsetForPosition(pos)
-                    annotatedString.getStringAnnotations(position, position)
-                        .firstOrNull()
-                        ?.let { sa ->
-                            if (sa.tag == "url") { // NON-NLS
-                                uriHandler.openUri(sa.item)
+        modifier = modifier.then(if (clickable) Modifier
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = { pos ->
+                    layoutResult.value?.let { layoutResult ->
+                        val position = layoutResult.getOffsetForPosition(pos)
+                        annotatedString
+                            .getStringAnnotations(position, position)
+                            .firstOrNull()
+                            ?.let { sa ->
+                                if (sa.tag == "url") { // NON-NLS
+                                    val url = sa.item
+                                    onUriClick?.let { it(url) } ?: uriHandler.openUri(url)
+                                }
                             }
-                        }
-                }
-            })
-        }.semantics {
-            if (urls.size == 1) {
-                role = Role.Button
-                onClick("Link (${annotatedString.substring(urls[0].start, urls[0].end)}") {
-                    uriHandler.openUri(urls[0].item)
-                    true
-                }
-            } else {
-                customActions = urls.map {
-                    CustomAccessibilityAction("Link (${annotatedString.substring(it.start, it.end)})") {
-                        uriHandler.openUri(it.item)
+                    }
+                })
+            }
+            .semantics {
+                if (urls.size == 1) {
+                    role = Role.Button
+                    onClick("Link (${annotatedString.substring(urls[0].start, urls[0].end)}") {
+                        val url = urls[0].item
+                        onUriClick?.let { it(url) } ?: uriHandler.openUri(url)
                         true
                     }
+                } else {
+                    customActions = urls.map {
+                        CustomAccessibilityAction("Link (${annotatedString.substring(it.start, it.end)})") {
+                            val url = it.item
+                            onUriClick?.let { it(url) } ?: uriHandler.openUri(url)
+                            true
+                        }
+                    }
                 }
-            }
-        } else Modifier),
+            } else Modifier),
         text = annotatedString,
         color = color,
         fontSize = fontSize,
@@ -280,7 +293,7 @@ fun CharSequence.toAnnotatedString(
         color = Color.Blue,
         textDecoration = TextDecoration.Underline
     ),
-    colorMapping: Map<Color, Color> = emptyMap()
+    colorMapping: Map<Color, Color> = emptyMap(),
 ): AnnotatedString {
     return if (this is Spanned) {
         this.toAnnotatedString(urlSpanStyle, colorMapping)
@@ -296,7 +309,7 @@ fun Spanned.toAnnotatedString(
         color = Color.Blue,
         textDecoration = TextDecoration.Underline
     ),
-    colorMapping: Map<Color, Color> = emptyMap()
+    colorMapping: Map<Color, Color> = emptyMap(),
 ): AnnotatedString {
     return buildAnnotatedString {
         append(this@toAnnotatedString.toString())
@@ -314,7 +327,11 @@ fun Spanned.toAnnotatedString(
         colorSpans.forEach { colorSpan ->
             val start = getSpanStart(colorSpan)
             val end = getSpanEnd(colorSpan)
-            addStyle(SpanStyle(color = colorMapping.getOrElse(Color(colorSpan.foregroundColor)) { Color(colorSpan.foregroundColor) }), start, end)
+            addStyle(
+                SpanStyle(color = colorMapping.getOrElse(Color(colorSpan.foregroundColor)) { Color(colorSpan.foregroundColor) }),
+                start,
+                end
+            )
         }
         styleSpans.forEach { styleSpan ->
             val start = getSpanStart(styleSpan)
@@ -322,7 +339,11 @@ fun Spanned.toAnnotatedString(
             when (styleSpan.style) {
                 Typeface.BOLD -> addStyle(SpanStyle(fontWeight = FontWeight.Bold), start, end)
                 Typeface.ITALIC -> addStyle(SpanStyle(fontStyle = FontStyle.Italic), start, end)
-                Typeface.BOLD_ITALIC -> addStyle(SpanStyle(fontWeight = FontWeight.Bold, fontStyle = FontStyle.Italic), start, end)
+                Typeface.BOLD_ITALIC -> addStyle(
+                    SpanStyle(fontWeight = FontWeight.Bold, fontStyle = FontStyle.Italic),
+                    start,
+                    end
+                )
             }
         }
         underlineSpans.forEach { underlineSpan ->
