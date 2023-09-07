@@ -15,6 +15,8 @@ ext {
 apply from: '../_publish.gradle'
 
 android {
+    namespace 'de.charlex.compose.htmltext'
+
     compileSdk 33
     buildToolsVersion "30.0.3"
 
@@ -40,8 +42,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'de.charlex.compose'
-
+    
     kotlinOptions {
         jvmTarget = '1.8'
     }
