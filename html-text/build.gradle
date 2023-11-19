@@ -8,7 +8,7 @@ apply from: '../buildCompose.gradle'
 
 ext {
     PUBLISH_GROUP_ID = 'de.charlex.compose'
-    PUBLISH_VERSION = '1.5.0'
+    PUBLISH_VERSION = '1.6.0'
     PUBLISH_ARTIFACT_ID = 'html-text'
 }
 
@@ -17,12 +17,11 @@ apply from: '../_publish.gradle'
 android {
     namespace 'de.charlex.compose.htmltext'
 
-    compileSdk 33
-    buildToolsVersion "30.0.3"
+    compileSdk 34
 
     defaultConfig {
         minSdk 21
-        targetSdk 33
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,12 +38,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     publishing {
@@ -56,5 +55,5 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "androidx.core:core-ktx:1.8.0"
+    implementation "androidx.core:core-ktx:1.12.0"
 }
