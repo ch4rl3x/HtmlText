@@ -6,5 +6,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "HtmlText"
+include ':material-html-text'
+include ':material3-html-text'
 include ':html-text'
 include ':example'

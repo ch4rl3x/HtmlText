@@ -7,15 +7,15 @@ apply from: '../_ktlint.gradle'
 apply from: '../buildCompose.gradle'
 
 ext {
-    PUBLISH_GROUP_ID = 'de.charlex.compose'
-    PUBLISH_VERSION = '1.6.0'
-    PUBLISH_ARTIFACT_ID = 'html-text'
+    PUBLISH_GROUP_ID = 'de.charlex.compose.material3'
+    PUBLISH_VERSION = '2.0.0-beta01'
+    PUBLISH_ARTIFACT_ID = 'material3-html-text'
 }
 
 apply from: '../_publish.gradle'
 
 android {
-    namespace 'de.charlex.compose.htmltext'
+    namespace 'de.charlex.compose.material3.htmltext'
 
     compileSdk 34
 
@@ -54,6 +54,9 @@ android {
 }
 
 dependencies {
+
+    implementation "androidx.compose.material3:material3"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "androidx.core:core-ktx:1.12.0"
 }

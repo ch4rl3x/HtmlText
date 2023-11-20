@@ -44,7 +44,9 @@ android {
 
 dependencies {
 
-    implementation project(':html-text')
+    implementation project(':material-html-text')
+
+    implementation "androidx.compose.material:material"
 
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'

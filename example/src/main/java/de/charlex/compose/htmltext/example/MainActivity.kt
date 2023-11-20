@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import de.charlex.compose.HtmlText
+import de.charlex.compose.material.HtmlText
 import de.charlex.compose.htmltext.example.ui.theme.HtmlTextTheme
 
 class MainActivity : ComponentActivity() {

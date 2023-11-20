@@ -1,4 +1,4 @@
-package de.charlex.compose
+package de.charlex.compose.material
 
 import android.graphics.Typeface
 import android.os.Build.VERSION.SDK_INT
