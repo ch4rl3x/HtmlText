@@ -3,7 +3,9 @@ package de.charlex.compose.material
 import android.graphics.Typeface
 import android.os.Build.VERSION.SDK_INT
 import android.text.Html
+import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.style.BulletSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
@@ -42,6 +44,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.core.text.getSpans
+import androidx.core.text.toSpannable
 
 /**
  * Simple Text composable to show the text with html styling from string resources.
@@ -312,7 +315,14 @@ fun Spanned.toAnnotatedString(
     colorMapping: Map<Color, Color> = emptyMap(),
 ): AnnotatedString {
     return buildAnnotatedString {
-        append(this@toAnnotatedString.toString())
+        val bulletSpans = getSpans<BulletSpan>()
+        val spannableStringBuilder = SpannableStringBuilder.valueOf(this@toAnnotatedString)
+        bulletSpans.forEach { bulletSpan ->
+            val start = getSpanStart(bulletSpan)
+            spannableStringBuilder.insert(start, " • ")
+            spannableStringBuilder.removeSpan(bulletSpan)
+        }
+        append(spannableStringBuilder.toSpannable())
         val urlSpans = getSpans<URLSpan>()
         val styleSpans = getSpans<StyleSpan>()
         val colorSpans = getSpans<ForegroundColorSpan>()

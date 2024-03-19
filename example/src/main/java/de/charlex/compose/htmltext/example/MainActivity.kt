@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
                     MultipleLinks()
                     ReturnLink()
                     ReturnLinks()
+                    UnorderedList()
                 }
             }
         }
@@ -118,5 +119,12 @@ fun ReturnLinks() {
         onUriClick = {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
+    )
+}
+
+@Composable
+fun UnorderedList() {
+    HtmlText(
+        text = "Unordered list<ul><li>Item</li><li>Item</li><li>Item</li></il>",
     )
 }
