@@ -21,6 +21,11 @@ Text composable to show html text from resources
 &lt;font color="#FF0000"> - Colored text (Markdown does not allow a preview here)<br>
 &lt;font color="red"> - Colored text (Markdown does not allow a preview here)<br><br>
 
+**Additional**<br>
+&lt;ul>&lt;li>&lt;/li>&lt;/ul> - Unordered lists
+ • Item
+ • Item
+
 ## MaterialTheme colors in HtmlText
 To use colors like `MaterialTheme.colors.primary` in `HtmlText`, map simple colors.
 ```kotlin
@@ -93,6 +98,7 @@ HtmlText(textId = R.string.hello_world)
 # Preview
 
 ![HtmlText](https://github.com/ch4rl3x/HtmlText/blob/main/art/screenshot.png)
+![HtmlText with unordered list](https://github.com/ch4rl3x/HtmlText/blob/main/art/ul-screenshot.png)
 
 
 That's it!
