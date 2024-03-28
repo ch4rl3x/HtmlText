@@ -32,6 +32,8 @@ class MainActivity : ComponentActivity() {
                     MultipleLinks()
                     ReturnLink()
                     ReturnLinks()
+                    BigText()
+                    SmallText()
                 }
             }
         }
@@ -119,4 +121,14 @@ fun ReturnLinks() {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     )
+}
+
+@Composable
+fun BigText() {
+    HtmlText(text = "<big>BIG</big> text")
+}
+
+@Composable
+fun SmallText() {
+    HtmlText(text = "<small>small</small> text")
 }

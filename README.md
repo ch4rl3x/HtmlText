@@ -19,7 +19,9 @@ Text composable to show html text from resources
 &lt;span style="color: #0000FF"> - Colored text (Markdown does not allow a preview here)<br>
 &lt;span style="color: red"> - Colored text (Markdown does not allow a preview here)<br>
 &lt;font color="#FF0000"> - Colored text (Markdown does not allow a preview here)<br>
-&lt;font color="red"> - Colored text (Markdown does not allow a preview here)<br><br>
+&lt;font color="red"> - Colored text (Markdown does not allow a preview here)<br>
+&lt;big> - <big>BIG TEXT</big> (Markdown does not allow a preview here)<br>
+&lt;small> - <small> small text</small> (Markdown does not allow a preview here)<br><br>
 
 ## MaterialTheme colors in HtmlText
 To use colors like `MaterialTheme.colors.primary` in `HtmlText`, map simple colors.

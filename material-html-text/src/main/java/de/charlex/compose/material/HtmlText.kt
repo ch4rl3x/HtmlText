@@ -5,6 +5,7 @@ import android.os.Build.VERSION.SDK_INT
 import android.text.Html
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
@@ -41,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.em
 import androidx.core.text.getSpans
 
 /**
@@ -318,6 +320,7 @@ fun Spanned.toAnnotatedString(
         val colorSpans = getSpans<ForegroundColorSpan>()
         val underlineSpans = getSpans<UnderlineSpan>()
         val strikethroughSpans = getSpans<StrikethroughSpan>()
+        val relativeSizeSpans = getSpans<RelativeSizeSpan>()
         urlSpans.forEach { urlSpan ->
             val start = getSpanStart(urlSpan)
             val end = getSpanEnd(urlSpan)
@@ -355,6 +358,11 @@ fun Spanned.toAnnotatedString(
             val start = getSpanStart(strikethroughSpan)
             val end = getSpanEnd(strikethroughSpan)
             addStyle(SpanStyle(textDecoration = TextDecoration.LineThrough), start, end)
+        }
+        relativeSizeSpans.forEach { relativeSizeSpan ->
+            val start = getSpanStart(relativeSizeSpan)
+            val end = getSpanEnd(relativeSizeSpan)
+            addStyle(style = SpanStyle(fontSize = relativeSizeSpan.sizeChange.em), start, end)
         }
     }
 }
