@@ -10,6 +10,8 @@ import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.text.style.UnderlineSpan
 import androidx.annotation.StringRes
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.LocalTextStyle
@@ -19,7 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -41,7 +46,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.util.fastAny
+import androidx.compose.ui.util.fastForEach
 import androidx.core.text.getSpans
+import kotlinx.coroutines.coroutineScope
 
 /**
  * Simple Text composable to show the text with html styling from string resources.
@@ -233,19 +241,24 @@ fun HtmlText(
     Text(
         modifier = modifier.then(if (clickable) Modifier
             .pointerInput(Unit) {
-                detectTapGestures(onTap = { pos ->
-                    layoutResult.value?.let { layoutResult ->
+                interceptTap(onTap = { pos ->
+                    val shouldConsumeEvent = layoutResult.value?.let { layoutResult ->
                         val position = layoutResult.getOffsetForPosition(pos)
-                        annotatedString
+                        return@let annotatedString
                             .getStringAnnotations(position, position)
                             .firstOrNull()
                             ?.let { sa ->
                                 if (sa.tag == "url") { // NON-NLS
                                     val url = sa.item
                                     onUriClick?.let { it(url) } ?: uriHandler.openUri(url)
+                                    true
+                                } else {
+                                    false
                                 }
                             }
-                    }
+                    } ?: false
+
+                    return@interceptTap shouldConsumeEvent
                 })
             }
             .semantics {
@@ -356,5 +369,45 @@ fun Spanned.toAnnotatedString(
             val end = getSpanEnd(strikethroughSpan)
             addStyle(SpanStyle(textDecoration = TextDecoration.LineThrough), start, end)
         }
+    }
+}
+
+typealias ShouldConsumePointerEvent = Boolean
+
+suspend fun PointerInputScope.interceptTap(
+    pass: PointerEventPass = PointerEventPass.Initial,
+    onTap: ((Offset) -> ShouldConsumePointerEvent)? = null,
+) = coroutineScope {
+    if (onTap == null) return@coroutineScope
+
+    awaitEachGesture {
+        val down = awaitFirstDown(pass = pass)
+        val downTime = System.currentTimeMillis()
+        val tapTimeout = viewConfiguration.longPressTimeoutMillis
+        val tapPosition = down.position
+
+        do {
+            val event = awaitPointerEvent(pass)
+            val currentTime = System.currentTimeMillis()
+
+            if (event.changes.size != 1) break // More than one event: not a tap
+            if (currentTime - downTime >= tapTimeout) break // Too slow: not a tap
+
+            val change = event.changes[0]
+
+            // Too much movement: not a tap
+            if ((change.position - tapPosition).getDistance() > viewConfiguration.touchSlop) break
+
+            if (change.id == down.id && !change.pressed) {
+                if (onTap(change.position)) {
+                    change.consume()
+                    down.consume()
+                    do {
+                        val pointerEvent = awaitPointerEvent()
+                        pointerEvent.changes.fastForEach { it.consume() }
+                    } while (pointerEvent.changes.fastAny { it.pressed })
+                }
+            }
+        } while (event.changes.any { it.id == down.id && it.pressed })
     }
 }
