@@ -11,6 +11,9 @@ kotlin {
             dependencies {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.core.ktx)
+                implementation(libs.androidx.appcompat)
+                implementation(libs.androidx.appcompat)
+                implementation("com.google.android.material:material:1.10.0")
 
                 implementation(compose.runtime)
                 implementation(compose.foundation)
@@ -24,10 +27,10 @@ kotlin {
 }
 
 android {
-    namespace = "de.charlex.compose.cache.example"
+    namespace = "de.charlex.compose.htmltext.example"
 
     defaultConfig {
-        applicationId = "de.charlex.compose.cache.example"
+        applicationId = "de.charlex.compose.htmltext.example"
         versionCode = 1
         versionName = "1.0"
     }

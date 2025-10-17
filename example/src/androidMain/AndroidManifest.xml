@@ -9,10 +9,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HtmlText">
         <activity
-            android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.HtmlText.NoActionBar">
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
+        >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

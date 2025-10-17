@@ -14,17 +14,17 @@
 
 ## Supported HTML tags
 
-| Tag | Description |
-|-----|------------|
-| `<b>` | Bold text |
-| `<i>` | Italic text |
-| `<strike>` | Strikethrough text |
-| `<u>` | Underlined text |
-| `<a href="...">` | Clickable link |
-| `<span style="color: #0000FF">` | Colored text |
-| `<span style="color: red">` | Colored text |
-| `<font color="#FF0000">` | Colored text |
-| `<font color="red">` | Colored text |
+| Tag                                | Description |
+|------------------------------------|------------|
+| `<b>`                              | Bold text |
+| `<i>`                              | Italic text |
+| `<strike>`                         | Strikethrough text |
+| `<u>`                              | Underlined text |
+| `<a href="...">`                   | Clickable link |
+| `<span style="color: #0000FF">`    | Colored text |
+| `<span style="color: rgb(r,g,b)">` | Colored text |
+| `<font color="#FF0000">`           | Colored text |
+| `<font color="rgb(r,g,b)">`           | Colored text |
 
 
 ## MaterialTheme colors in HtmlText

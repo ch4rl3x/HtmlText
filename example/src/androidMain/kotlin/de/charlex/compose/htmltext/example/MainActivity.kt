@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import HtmlText
 import de.charlex.compose.htmltext.example.ui.theme.HtmlTextTheme
+import de.charlex.compose.htmltext.material.HtmlText
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,32 +60,15 @@ fun ColorTextBySpan() {
 
 @Composable
 fun ColorTextByFont() {
-    HtmlText(text = "Hello <font color=\"red\">red</font> world")
+    HtmlText(text = "Hello <font color=\"#FF0000\">red</font> world")
 }
 
 @Composable
 fun ColorTextWithColorMapping() {
-    HtmlTextTheme(
-        darkTheme = false
-    ) {
-        Surface {
-            HtmlText(
-                text = "Hello <font color=\"red\">red</font> world",
-                colorMapping = mapOf(Color.Red to MaterialTheme.colors.primary)
-            )
-        }
-    }
-
-    HtmlTextTheme(
-        darkTheme = true
-    ) {
-        Surface {
-            HtmlText(
-                text = "Hello <font color=\"red\">red</font> world",
-                colorMapping = mapOf(Color.Red to MaterialTheme.colors.primary)
-            )
-        }
-    }
+    HtmlText(
+        text = "Hello <font color=\"#FF0000\">red</font> world",
+        colorMapping = mapOf(Color.Red to Color.Green)
+    )
 }
 
 @Preview(showBackground = true)

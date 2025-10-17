@@ -40,7 +40,6 @@ import de.charlex.compose.htmltext.material.HtmlText
 @Composable
 @Deprecated(
     message = "Moved to de.charlex.compose.htmltext.material package",
-    replaceWith = ReplaceWith("HtmlText", "de.charlex.compose.htmltext.material.HtmlText"),
     level = DeprecationLevel.ERROR
 )
 fun HtmlText(
