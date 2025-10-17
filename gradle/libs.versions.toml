@@ -1,0 +1,53 @@
+[versions]
+
+compileSdk = "36"
+targetSdk = "36"
+minSdk = "21"
+
+jvmTarget = "17"
+# https://developer.android.com/build/releases/gradle-plugin#compatibility
+agp = "8.11.2"
+
+#https://github.com/JetBrains/compose-multiplatform
+compose-multiplatform = "1.9.0"
+#https://kotlinlang.org/docs/multiplatform-compatibility-guide.html
+kotlin = "2.2.20"
+# https://github.com/google/ksp
+ksp = "2.2.20-2.0.3"
+
+#https://mvnrepository.com/artifact/org.jetbrains.compose.compiler/compiler
+#composeCompiler = "1.5.8.1"
+
+# https://developer.android.com/jetpack/androidx/releases/activity
+androidxActivity = "1.11.0"
+# https://developer.android.com/jetpack/androidx/releases/appcompat
+androidxAppCompat = "1.7.1"
+coreKtx = "1.17.0"
+
+ksoup-html = "0.6.0"
+
+dokka = "2.0.0"
+nexus-publish-plugin = "2.0.0"
+
+[libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppCompat" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+mohamedrejeb-ksoup-html = { module = "com.mohamedrejeb.ksoup:ksoup-html", version.ref = "ksoup-html" }
+
+# Build logic dependencies
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-gradlePlugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "compose-multiplatform" }
+nexusPublish-gradlePlugin = { module = "io.github.gradle-nexus:publish-plugin", version.ref = "nexus-publish-plugin" }
+dokka-gradlePlugin = { module = "org.jetbrains.dokka:org.jetbrains.dokka.gradle.plugin", version.ref = "dokka" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kmp = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin"}
+nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "nexus-publish-plugin"}
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

@@ -1,25 +1,31 @@
-# HtmlText
-
-<a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ALint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Lint/badge.svg" alt="Lint"></a>
-<a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3AKtlint"><img src="https://github.com/ch4rl3x/HtmlText/workflows/Ktlint/badge.svg" alt="Ktlint"></a>
+<a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ABuild"><img src="https://github.com/ch4rl3x/HtmlText/workflows/build.yml/badge.svg" alt="Build"></a>
 <a href="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText"><img src="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText/badge" alt="CodeFactor" /></a>
 
 Material <a href="https://repo1.maven.org/maven2/de/charlex/compose/material/material-html-text/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose.material/material-html-text" alt="Maven Central" /></a>
 
 Material 3 <a href="https://repo1.maven.org/maven2/de/charlex/compose/material3/material3-html-text/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose.material3/material3-html-text" alt="Maven Central" /></a>
 
-Text composable to show html text from resources
+# HtmlText
 
-**Supported Tags:**<br>
-&lt;b> - <b>Bold text</b><br>
-&lt;i> - <i>Italic text</i><br>
-&lt;strike> - <strike>Striked text</strike><br>
-&lt;u> - <u>Underlined text</u> (Markdown does not allow a preview here)<br> 
-&lt;a href="..."> - <a href="https://github.com/ch4rl3x/HtmlText">Link</a><br>
-&lt;span style="color: #0000FF"> - Colored text (Markdown does not allow a preview here)<br>
-&lt;span style="color: red"> - Colored text (Markdown does not allow a preview here)<br>
-&lt;font color="#FF0000"> - Colored text (Markdown does not allow a preview here)<br>
-&lt;font color="red"> - Colored text (Markdown does not allow a preview here)<br><br>
+`HtmlText` is a Kotlin Multiplatform library that allows you to render HTML content as Compose `AnnotatedStrings. It supports basic formatting, hyperlinks, and color styling in a multiplatform-friendly way.
+
+> [!NOTE]  
+> 🚀 RevealSwipe is now Compose Multiplatform
+
+## Supported HTML tags
+
+| Tag | Description |
+|-----|------------|
+| `<b>` | Bold text |
+| `<i>` | Italic text |
+| `<strike>` | Strikethrough text |
+| `<u>` | Underlined text |
+| `<a href="...">` | Clickable link |
+| `<span style="color: #0000FF">` | Colored text |
+| `<span style="color: red">` | Colored text |
+| `<font color="#FF0000">` | Colored text |
+| `<font color="red">` | Colored text |
+
 
 ## MaterialTheme colors in HtmlText
 To use colors like `MaterialTheme.colors.primary` in `HtmlText`, map simple colors.
@@ -58,7 +64,7 @@ You can combine colorMapping with string arguments (CDATA) and all other HTML ta
 
 
 
-# Add to your project
+## Dependency
 
 Add actual HtmlText library:
 
@@ -76,7 +82,7 @@ dependencies {
 }
 ```
 
-# How does it work?
+## How does it work?
 
 Use it like a normal Text composable
 
@@ -90,12 +96,10 @@ HtmlText(textId = R.string.hello_world)
 </resources>
 ```
 
-# Preview
+## Preview
 
 ![HtmlText](https://github.com/ch4rl3x/HtmlText/blob/main/art/screenshot.png)
 
-
-That's it!
 
 License
 --------

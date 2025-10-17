@@ -2,6 +2,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/android,windows,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=android,windows,macos
 
+.kotlin/
+
 ### Android ###
 # Built application files
 *.apk
