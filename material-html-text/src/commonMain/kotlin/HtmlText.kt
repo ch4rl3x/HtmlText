@@ -77,6 +77,7 @@ fun HtmlText(
     style: TextStyle = LocalTextStyle.current,
     onUriClick: ((String) -> Unit)? = null,
 ) {
+
     val annotatedString = htmlToAnnotatedString(
         html = text,
         urlSpanStyle = urlSpanStyle,

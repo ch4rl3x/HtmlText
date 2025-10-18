@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">HtmlText Example</string>
-    <string name="hello_world">Text from resourcres loaded by <b>getText</b> insteadof <b>getString</b> . This <i><strike>text</strike>sentence</i> is form<b>att<u>ed</u></b> in simple html. <a href="https://github.com/ch4rl3x/HtmlText">HtmlText</a></string>
+    <string name="hello_world_excaped">Escaped text (&lt; replaced by &amp;l&#8204;t; and &gt; replaces by &amp;g&#8204;t;) from resourcres loaded with &lt;b&gt;stringResources()&lt;/b&gt; . This &lt;i&gt;&lt;strike&gt;text&lt;/strike&gt;sentence&lt;/i&gt; is form&lt;b&gt;att&lt;u&gt;ed&lt;/u&gt;&lt;/b&gt; in simple html. &lt;a href="https://github.com/ch4rl3x/HtmlText"&gt;HtmlText&lt;/a&gt;</string>
+    <string name="hello_world_cdata"><![CDATA[CDATA text from resourcres loaded with <b>stringResources()</b> . This <i><strike>text</strike>sentence</i> is form<b>att<u>ed</u></b> in simple html. <a href="https://github.com/ch4rl3x/HtmlText">HtmlText</a>]]></string>
 </resources>

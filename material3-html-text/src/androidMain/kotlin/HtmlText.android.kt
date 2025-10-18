@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -41,7 +42,7 @@ import de.charlex.compose.htmltext.core.htmlToAnnotatedString
 @Composable
 fun HtmlText(
     modifier: Modifier = Modifier,
-    @StringRes textId: Int,
+    @StringRes cdataStringId: Int,
     urlSpanStyle: SpanStyle = SpanStyle(
         color = MaterialTheme.colorScheme.tertiary,
         textDecoration = TextDecoration.Underline
@@ -64,8 +65,14 @@ fun HtmlText(
     style: TextStyle = LocalTextStyle.current,
     onUriClick: ((String) -> Unit)? = null,
 ) {
-    val context = LocalContext.current
-    val annotatedString = htmlToAnnotatedString(context.resources.getText(textId).toString(), urlSpanStyle, colorMapping)
+    val annotatedString = htmlToAnnotatedString(
+        html = stringResource(cdataStringId),
+        urlSpanStyle = urlSpanStyle,
+        colorMapping = colorMapping,
+        bulletChar = bulletChar,
+        indentPerLevel = indentPerLevel,
+        orderedSeparator = orderedSeparator
+    )
 
     HtmlText(
         modifier = modifier,

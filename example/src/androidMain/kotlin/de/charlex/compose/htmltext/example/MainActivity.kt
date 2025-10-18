@@ -5,9 +5,11 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.MaterialTheme
@@ -24,44 +26,57 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HtmlTextTheme {
-                // A surface container using the 'background' color from the theme
-                Column(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .background(color = MaterialTheme.colors.background)
-                        .padding(horizontal = 10.dp),
-                    verticalArrangement = spacedBy(12.dp)
-                ) {
-                    Greeting()
-                    StringGreeting()
-                    ColorTextBySpan()
-                    ColorTextByFont()
-                    ColorTextWithColorMapping()
-                    MultipleLinks()
-                    ReturnLink()
-                    ReturnLinks()
-                    UnorderedList()
-
-                    FlowRow {
-                        OrderedList("a")
-                        OrderedList("A")
-                        OrderedList("i")
-                        OrderedList("I")
-                        OrderedList("1")
-                    }
-
-                    NestedLists()
-                    OrderedListVariants()
-                }
-            }
+            ExampleContent()
         }
     }
 }
 
 @Composable
-fun Greeting() {
-    HtmlText(textId = R.string.hello_world)
+fun ExampleContent() {
+    HtmlTextTheme {
+        Column(
+            modifier = Modifier
+                .statusBarsPadding()
+                .background(color = MaterialTheme.colors.background)
+                .padding(horizontal = 20.dp),
+            verticalArrangement = spacedBy(12.dp)
+        ) {
+            ResourcesEscaped()
+            ResourcesCDATA()
+            StringGreeting()
+            ColorTextBySpan()
+            ColorTextByFont()
+            ColorTextWithColorMapping()
+            MultipleLinks()
+            ReturnLink()
+            ReturnLinks()
+            UnorderedList()
+
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                OrderedList("a")
+                OrderedList("A")
+                OrderedList("i")
+                OrderedList("I")
+                OrderedList("1")
+            }
+
+            NestedLists()
+            OrderedListVariants()
+        }
+    }
+}
+
+@Composable
+fun ResourcesEscaped() {
+    HtmlText(cdataStringId = R.string.hello_world_excaped)
+}
+
+@Composable
+fun ResourcesCDATA() {
+    HtmlText(cdataStringId = R.string.hello_world_cdata)
 }
 
 @Composable
@@ -91,16 +106,7 @@ fun ColorTextWithColorMapping() {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    HtmlTextTheme {
-        Column {
-            Greeting()
-            StringGreeting()
-        }
-    }
-}
+
 
 @Composable
 fun ReturnLink() {
@@ -142,4 +148,11 @@ fun NestedLists() {
 @Composable
 fun OrderedListVariants() {
     HtmlText(text = "Ordered variants<ol start=\"3\" type=\"1\"><li>Item</li><li>Item<ul><li>Sub</li><li>Sub</li></ul></li><li>Item</li></ol>")
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    ExampleContent()
 }

@@ -69,7 +69,7 @@ fun HtmlText(
 ) {
     HtmlText(
         modifier = modifier,
-        textId = textId,
+        cdataStringId = textId,
         urlSpanStyle = urlSpanStyle,
         colorMapping = colorMapping,
         color = color,
