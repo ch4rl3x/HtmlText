@@ -1,16 +1,14 @@
-<a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ABuild"><img src="https://github.com/ch4rl3x/HtmlText/workflows/build.yml/badge.svg" alt="Build"></a>
+<a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ABuild"><img src="https://github.com/ch4rl3x/HtmlText/actions/workflows/build.yml/badge.svg" alt="Build"></a>
 <a href="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText"><img src="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText/badge" alt="CodeFactor" /></a>
+<a href="https://repo1.maven.org/maven2/de/charlex/compose/material3/material3-html-text/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose.material3/material3-html-text" alt="Maven Central" /></a> 
 
-| Material | Material 3 |
-|-----|------------|
-| <a href="https://repo1.maven.org/maven2/de/charlex/compose/material/material-html-text/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose.material/material-html-text" alt="Maven Central" /></a> | <a href="https://repo1.maven.org/maven2/de/charlex/compose/material3/material3-html-text/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose.material3/material3-html-text" alt="Maven Central" /></a> |
 
 # HtmlText
 
 `HtmlText` is a Kotlin Multiplatform library that allows you to render HTML content as Compose `AnnotatedStrings. It supports basic formatting, hyperlinks, and color styling in a multiplatform-friendly way.
 
 > [!NOTE]  
-> 🚀 RevealSwipe is now Compose Multiplatform
+> 🚀 HtmlText is now Compose Multiplatform
 
 ## Supported HTML tags
 
@@ -34,68 +32,14 @@
 To use colors like `MaterialTheme.colors.primary` in `HtmlText`, map simple colors.
 ```kotlin
 HtmlText(
-    textId = R.string.hello_world,
+    stringId = R.string.hello_world_cdata,
     colorMapping = mapOf(Color.Red to MaterialTheme.colors.primary)
 )
 ```
 ```xml
 <resources>
-    <string name="hello_world">"Hello <span style="color: red">World</span>"</string>
-</resources>
-```
-
-## String arguments in HtmlText
-To use string arguments with `HtmlText`, use CDATA
-```kotlin
-HtmlText(
-    text = stringResource(R.string.hello_world, "Hello")
-)
-```
-```xml
-<resources>
-    <string name="hello_world"><![CDATA[%1$s World]]></string>
-</resources>
-```
-
-## Combine MaterialTheme colors and string arguments in HtmlText
-You can combine colorMapping with string arguments (CDATA) and all other HTML tags. If you use CDATA, you have to escape double quotes.
-```xml
-<resources>
-    <string name="hello_world"><![CDATA[Hello <span style=\"color: red\">World</span>]]></string>
-</resources>
-```
-
-
-
-## Dependency
-
-Add actual HtmlText library:
-
-```groovy
-dependencies {
-    implementation 'de.charlex.compose.material:material-html-text:2.1.0-beta01'
-}
-```
-
-or
-
-```groovy
-dependencies {
-    implementation 'de.charlex.compose.material3:material3-html-text:2.1.0-beta01'
-}
-```
-
-## How does it work?
-
-Use it like a normal Text composable
-
-```kotlin
-HtmlText(textId = R.string.hello_world)
-```
-
-```xml
-<resources>
-    <string name="hello_world">Hello <b>World</b>. This <i><strike>text</strike>sentence</i> is form<b>att<u>ed</u></b> in simple html. <a href="https://github.com/ch4rl3x/HtmlText">HtmlText</a></string>
+    <string name="hello_world_escaped">Hello &lt;span style="color: #FF0000"&gt;World&lt;/span&gt;</string>
+    <string name="hello_world_cdata"><![CDATA[Hello <span style="color: #FF0000">World</span>]]></string>
 </resources>
 ```
 
@@ -103,6 +47,23 @@ HtmlText(textId = R.string.hello_world)
 
 ![HtmlText](https://github.com/ch4rl3x/HtmlText/blob/main/art/screenshot.png)
 
+## Dependency
+
+Add actual HtmlText library:
+
+```groovy
+dependencies {
+    implementation 'de.charlex.compose.material:material-html-text:3.0.0-beta01'
+}
+```
+
+or
+
+```groovy
+dependencies {
+    implementation 'de.charlex.compose.material3:material3-html-text:3.0.0-beta01'
+}
+```
 
 License
 --------
