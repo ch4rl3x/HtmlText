@@ -6,13 +6,17 @@ runs:
   steps:
     - uses: ./.github/workflows/actions/prepare
 
-    - name: Build library
+    - name: Build material-html-text
       shell: bash
-      run: ./gradlew assembleRelease
+      run: ./gradlew :material-html-text:assembleRelease
+
+    - name: Build material3-html-text
+      shell: bash
+      run: ./gradlew :material3-html-text:assembleRelease
 
     - name: Build sample apps
       shell: bash
-      run: ./gradlew -p example assembleRelease
+      run: ./gradlew :sample-app:android-app:assembleRelease
 
     - name: Build dokka
       shell: bash
