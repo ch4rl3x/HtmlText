@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +31,7 @@ class MainActivity : ComponentActivity() {
                     MultipleLinks()
                     ReturnLink()
                     ReturnLinks()
+                    UnsortedList()
                 }
             }
         }
@@ -61,6 +61,11 @@ fun ColorTextBySpan() {
 @Composable
 fun ColorTextByFont() {
     HtmlText(text = "Hello <font color=\"#FF0000\">red</font> world")
+}
+
+@Composable
+fun UnsortedList() {
+    HtmlText(text = "Unsorted list:<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>")
 }
 
 @Composable

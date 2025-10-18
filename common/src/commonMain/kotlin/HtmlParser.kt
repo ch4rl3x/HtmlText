@@ -12,7 +12,7 @@ import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
 
 /**
  * HTML -> AnnotatedString converter for Compose Multiplatform
- * Supports nested <b>, <i>, <u>, <strike>, <a href="">
+ * Supports nested <b>, <i>, <u>, <strike>, <a href=""> and now <ul><li>
  */
 fun htmlToAnnotatedString(
     html: String,
@@ -20,7 +20,9 @@ fun htmlToAnnotatedString(
         color = Color.Blue,
         textDecoration = TextDecoration.Underline
     ),
-    colorMapping: Map<Color, Color> = emptyMap()
+    colorMapping: Map<Color, Color> = emptyMap(),
+    bulletChar: String = "•", // konfigurierbar
+    indentPerLevel: Int = 2 // Anzahl Spaces pro Verschachtelung
 ): AnnotatedString {
     val builder = Builder()
 
@@ -31,7 +33,10 @@ fun htmlToAnnotatedString(
         val href: String? = null
     )
 
+    data class UlContext(var itemCount: Int)
+
     val tagStack = mutableListOf<TagInfo>()
+    val ulStack = mutableListOf<UlContext>()
 
     fun parseColorAttr(raw: String?): Color? {
         if (raw == null) return null
@@ -59,6 +64,8 @@ fun htmlToAnnotatedString(
             null
         }
     }
+
+    fun lastChar(): Char? = if (builder.length > 0) builder.toAnnotatedString().text.last() else null
 
     val ksoupHtmlParser = KsoupHtmlParser(
         handler = object : KsoupHtmlHandler {
@@ -90,6 +97,32 @@ fun htmlToAnnotatedString(
                     style = style.merge(SpanStyle(color = mapped))
                 }
 
+                if (lowerName == "ul") {
+                    ulStack.add(UlContext(itemCount = 0))
+                }
+
+                if (lowerName == "li") {
+                    // Falls wir in einer Liste sind, Item vorbereiten
+                    val currentUl = ulStack.lastOrNull()
+                    val depth = ulStack.size // erste Ebene = 0
+                    if (currentUl != null) {
+                        val prev = lastChar()
+                        // Neue Zeile vor jedem Item außer dem ersten innerhalb dieser Liste
+                        if (currentUl.itemCount > 0) {
+                            if (prev != '\n') builder.append('\n')
+                        } else {
+                            // erstes Item: nur neue Zeile wenn vorheriger Text nicht bereits Zeilenumbruch ist
+                            if (prev != null && prev != '\n') builder.append('\n')
+                        }
+                        // Einrückung + Bullet
+                        val indent = " ".repeat(depth * indentPerLevel)
+                        builder.append(indent)
+                        builder.append(bulletChar)
+                        builder.append(" ")
+                        currentUl.itemCount++
+                    }
+                }
+
                 val href = if (lowerName == "a") attributes["href"] else null
                 tagStack.add(TagInfo(lowerName, style, start, href))
             }
@@ -100,6 +133,11 @@ fun htmlToAnnotatedString(
 
             override fun onCloseTag(name: String, isImplied: Boolean) {
                 val lowerName = name.lowercase()
+                if (lowerName == "ul") {
+                    // Liste endet -> optional Zeilenumbruch falls nicht vorhanden und nächster Text folgt
+                    // Wir fügen keinen extra Umbruch am Ende hinzu, nur wenn letzter Char nicht \n
+                    // (Könnte später konfigurierbar gemacht werden)
+                }
                 val idx = tagStack.indexOfLast { it.name == lowerName }
                 if (idx != -1) {
                     val tag = tagStack.removeAt(idx)
@@ -115,6 +153,9 @@ fun htmlToAnnotatedString(
                             )
                         }
                     }
+                }
+                if (lowerName == "ul") {
+                    ulStack.removeLastOrNull()
                 }
             }
         }
