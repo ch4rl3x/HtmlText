@@ -7,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
@@ -19,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import de.charlex.compose.htmltext.core.htmlToAnnotatedString
 
 
@@ -42,12 +42,18 @@ import de.charlex.compose.htmltext.core.htmlToAnnotatedString
 @Composable
 fun HtmlText(
     modifier: Modifier = Modifier,
-    @StringRes cdataStringId: Int,
+    linkBoxModifier: (text: String, link: String) -> Modifier = { _, _ -> Modifier },
+    @StringRes stringId: Int,
     urlSpanStyle: SpanStyle = SpanStyle(
         color = MaterialTheme.colorScheme.tertiary,
         textDecoration = TextDecoration.Underline
     ),
     colorMapping: Map<Color, Color> = emptyMap(),
+    bulletChar: String = "•",
+    indentPerLevel: TextUnit = 15.sp,
+    extraIndentUnorderedRestLines: TextUnit = 8.sp,
+    extraIndentOrderedRestLines: TextUnit = 15.sp,
+    orderedSeparator: String = ".",
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -66,16 +72,19 @@ fun HtmlText(
     onUriClick: ((String) -> Unit)? = null,
 ) {
     val annotatedString = htmlToAnnotatedString(
-        html = stringResource(cdataStringId),
+        html = stringResource(stringId),
         urlSpanStyle = urlSpanStyle,
         colorMapping = colorMapping,
         bulletChar = bulletChar,
         indentPerLevel = indentPerLevel,
+        extraIndentUnorderedRestLines = extraIndentUnorderedRestLines,
+        extraIndentOrderedRestLines = extraIndentOrderedRestLines,
         orderedSeparator = orderedSeparator
     )
 
     HtmlText(
         modifier = modifier,
+        linkBoxModifier = linkBoxModifier,
         annotatedString = annotatedString,
         color = color,
         fontSize = fontSize,

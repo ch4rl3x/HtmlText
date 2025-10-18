@@ -14,17 +14,20 @@
 
 ## Supported HTML tags
 
-| Tag                                | Description |
-|------------------------------------|------------|
-| `<b>`                              | Bold text |
-| `<i>`                              | Italic text |
-| `<strike>`                         | Strikethrough text |
-| `<u>`                              | Underlined text |
-| `<a href="...">`                   | Clickable link |
-| `<span style="color: #0000FF">`    | Colored text |
-| `<span style="color: rgb(r,g,b)">` | Colored text |
-| `<font color="#FF0000">`           | Colored text |
-| `<font color="rgb(r,g,b)">`           | Colored text |
+| Tag                                | Description               |
+|------------------------------------|---------------------------|
+| `<b>`                              | Bold text                 |
+| `<i>`                              | Italic text               |
+| `<strike>`                         | Strikethrough text        |
+| `<u>`                              | Underlined text           |
+| `<ul>`                             | Unordered list            |
+| `<ol start="3" type="1">`          | Ordered list (a., A., 1.) |
+| `<li>`                             | List item                 |
+| `<a href="...">`                   | Clickable link            |
+| `<span style="color: #0000FF">`    | Colored text              |
+| `<span style="color: rgb(r,g,b)">` | Colored text              |
+| `<font color="#FF0000">`           | Colored text              |
+| `<font color="rgb(r,g,b)">`        | Colored text              |
 
 
 ## MaterialTheme colors in HtmlText

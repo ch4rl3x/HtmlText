@@ -24,4 +24,5 @@ rootProject.name = "HtmlText"
 include(":material-html-text")
 include(":material3-html-text")
 include(":common")
-include(":example")
+include(":sample-app:shared")
+include(":sample-app:android-app")

@@ -1,14 +1,31 @@
 package de.charlex.compose.htmltext.core
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.AnnotatedString.Builder
+import androidx.compose.ui.text.AnnotatedString.Builder.BulletScope
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.PlatformParagraphStyle
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextIndent
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlHandler
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
+import kotlin.compareTo
+import kotlin.text.append
 
 
 fun htmlToAnnotatedString(
@@ -19,7 +36,9 @@ fun htmlToAnnotatedString(
     ),
     colorMapping: Map<Color, Color> = emptyMap(),
     bulletChar: String = "•",
-    indentPerLevel: Int = 2,
+    indentPerLevel: TextUnit = 15.sp,
+    extraIndentUnorderedRestLines: TextUnit = 8.sp,
+    extraIndentOrderedRestLines: TextUnit = 15.sp,
     orderedSeparator: String = "."
 ): AnnotatedString {
     val builder = Builder()
@@ -35,7 +54,7 @@ fun htmlToAnnotatedString(
         val ordered: Boolean,
         var itemCount: Int,
         val startIndex: Int = 1,
-        val type: Char? = null // a, A, i, I, 1
+        val type: Char? = null // a, A, 1
     )
 
     val tagStack = mutableListOf<TagInfo>()
@@ -67,33 +86,14 @@ fun htmlToAnnotatedString(
         }
     }
 
-    fun lastChar(): Char? = if (builder.length > 0) builder.toAnnotatedString().text.last() else null
-
-    fun toRoman(num: Int): String { // einfache Umsetzung bis 3999
-        if (num <= 0) return num.toString()
-        val numerals = listOf(
-            1000 to "M", 900 to "CM", 500 to "D", 400 to "CD",
-            100 to "C", 90 to "XC", 50 to "L", 40 to "XL",
-            10 to "X", 9 to "IX", 5 to "V", 4 to "IV", 1 to "I"
-        )
-        var n = num
-        val sb = StringBuilder()
-        for ((value, symbol) in numerals) {
-            while (n >= value) {
-                sb.append(symbol)
-                n -= value
-            }
-        }
-        return sb.toString()
-    }
-
     fun formatOrdered(index: Int, type: Char?): String = when (type) {
         'a' -> ('a' + (index - 1) % 26).toString()
         'A' -> ('A' + (index - 1) % 26).toString()
-        'i' -> toRoman(index).lowercase()
-        'I' -> toRoman(index)
         else -> index.toString()
     }
+
+    var possibleNextLineBreakInList by mutableStateOf(false)
+    var closedSubList by mutableStateOf(false)
 
     val ksoupHtmlParser = KsoupHtmlParser(
         handler = object : KsoupHtmlHandler {
@@ -111,9 +111,7 @@ fun htmlToAnnotatedString(
                 }
 
                 // Farbe aus Attribut oder Style-Attribut extrahieren
-                val rawColor = attributes["color"]
-                    ?: attributes["style"]?.substringAfter("color:", "").orEmpty()
-                        .substringBefore(";").ifBlank { null }
+                val rawColor = attributes["color"] ?: attributes["style"]?.substringAfter("color:", "").orEmpty().substringBefore(";").ifBlank { null }
                 val parsedColor = parseColorAttr(rawColor)
                 if (parsedColor != null) {
                     val mapped = colorMapping.getOrElse(parsedColor) { parsedColor }
@@ -124,23 +122,36 @@ fun htmlToAnnotatedString(
                     val ordered = lowerName == "ol"
                     val startIndex = attributes["start"]?.toIntOrNull()?.coerceAtLeast(1) ?: 1
                     val typeAttr = attributes["type"]?.firstOrNull()?.let { ch ->
-                        if (ch in listOf('a', 'A', 'i', 'I', '1')) ch else null
+                        if (ch in listOf('a', 'A', '1')) ch else null
                     }
                     listStack.add(ListContext(ordered = ordered, itemCount = 0, startIndex = startIndex, type = typeAttr))
+
+                    val depth = listStack.size
+
+                    val restLineIndent = when {
+                        ordered -> ((indentPerLevel * depth).value + extraIndentOrderedRestLines.value).sp
+                        else -> ((indentPerLevel * depth).value + extraIndentUnorderedRestLines.value).sp
+                    }
+
+                    builder.pushStyle(
+                        ParagraphStyle(
+                            textIndent = TextIndent(
+                                firstLine = indentPerLevel * depth,
+                                restLine = restLineIndent
+                            )
+                        )
+                    )
                 }
 
                 if (lowerName == "li") {
                     val currentList = listStack.lastOrNull()
-                    val depth = listStack.size
                     if (currentList != null) {
-                        val prev = lastChar()
-                        if (currentList.itemCount > 0) {
-                            if (prev != '\n') builder.append('\n')
-                        } else {
-                            if (prev != null && prev != '\n') builder.append('\n')
+                        if(possibleNextLineBreakInList) {
+                            println(builder.toAnnotatedString().text)
+                            builder.append('\n')
+                            possibleNextLineBreakInList = false
                         }
-                        val indent = " ".repeat(depth * indentPerLevel)
-                        builder.append(indent)
+
                         if (currentList.ordered) {
                             val numberIndex = currentList.startIndex + currentList.itemCount
                             val formatted = formatOrdered(numberIndex, currentList.type)
@@ -181,16 +192,28 @@ fun htmlToAnnotatedString(
                         }
                     }
                 }
+
+                if(lowerName == "li") {
+                    val currentList = listStack.lastOrNull()
+                    if (currentList != null && currentList.itemCount > 0 && closedSubList.not()) {
+                        possibleNextLineBreakInList = true
+                    } else {
+                        closedSubList = false
+                    }
+
+                }
+
                 if (lowerName == "ul" || lowerName == "ol") {
                     listStack.removeLastOrNull()
+                    closedSubList = listStack.isNotEmpty()
+                    possibleNextLineBreakInList = false
+                    builder.pop()
                 }
             }
         }
     )
 
     ksoupHtmlParser.write(html)
-
     ksoupHtmlParser.end()
-
     return builder.toAnnotatedString()
 }

@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import de.charlex.compose.htmltext.core.htmlToAnnotatedString
 import kotlin.Int
 
@@ -43,6 +44,7 @@ import kotlin.Int
 @Composable
 fun HtmlText(
     modifier: Modifier = Modifier,
+    linkBoxModifier: (text: String, link: String) -> Modifier = { _, _ -> Modifier },
     @StringRes cdataStringId: Int,
     urlSpanStyle: SpanStyle = SpanStyle(
         color = MaterialTheme.colors.secondary,
@@ -50,7 +52,9 @@ fun HtmlText(
     ),
     colorMapping: Map<Color, Color> = emptyMap(),
     bulletChar: String = "•",
-    indentPerLevel: Int = 2,
+    indentPerLevel: TextUnit = 15.sp,
+    extraIndentUnorderedRestLines: TextUnit = 8.sp,
+    extraIndentOrderedRestLines: TextUnit = 15.sp,
     orderedSeparator: String = ".",
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -75,11 +79,14 @@ fun HtmlText(
         colorMapping = colorMapping,
         bulletChar = bulletChar,
         indentPerLevel = indentPerLevel,
+        extraIndentUnorderedRestLines = extraIndentUnorderedRestLines,
+        extraIndentOrderedRestLines = extraIndentOrderedRestLines,
         orderedSeparator = orderedSeparator
     )
 
     HtmlText(
         modifier = modifier,
+        linkBoxModifier = linkBoxModifier,
         annotatedString = annotatedString,
         color = color,
         fontSize = fontSize,

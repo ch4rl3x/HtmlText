@@ -1,0 +1,5 @@
+TEAM_ID=
+BUNDLE_ID=de.charlex.compose
+APP_NAME=HtmlText-Sample
+MODULE_NAME=shared
+REDIRECT_SCHEME=de.charlex.compose.htmltext.sample
