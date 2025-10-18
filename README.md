@@ -5,7 +5,7 @@
 
 # HtmlText
 
-`HtmlText` is a Kotlin Multiplatform library that allows you to render HTML content as Compose `AnnotatedStrings. It supports basic formatting, hyperlinks, and color styling in a multiplatform-friendly way.
+`HtmlText` is a Kotlin Multiplatform library that allows you to render HTML content as Compose `AnnotatedString`s. It supports basic formatting, hyperlinks, and color styling in a multiplatform-friendly way. `HtmlText` has been made accessible for screen readers and keyboard operation.
 
 > [!NOTE]  
 > 🚀 HtmlText is now Compose Multiplatform
