@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">HtmlText Example</string>
-    <string name="hello_world">Hello <b>World</b>. This <i><strike>text</strike>sentence</i> is form<b>att<u>ed</u></b> in simple html. <a href="https://github.com/ch4rl3x/HtmlText">HtmlText</a></string>
+    <string name="hello_world">Text from resourcres loaded by <b>getText</b> insteadof <b>getString</b> . This <i><strike>text</strike>sentence</i> is form<b>att<u>ed</u></b> in simple html. <a href="https://github.com/ch4rl3x/HtmlText">HtmlText</a></string>
 </resources>

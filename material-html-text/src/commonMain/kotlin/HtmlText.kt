@@ -57,6 +57,9 @@ fun HtmlText(
         textDecoration = TextDecoration.Underline
     ),
     colorMapping: Map<Color, Color> = emptyMap(),
+    bulletChar: String = "•",
+    indentPerLevel: Int = 2,
+    orderedSeparator: String = ".",
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -74,7 +77,14 @@ fun HtmlText(
     style: TextStyle = LocalTextStyle.current,
     onUriClick: ((String) -> Unit)? = null,
 ) {
-    val annotatedString = htmlToAnnotatedString(text, urlSpanStyle, colorMapping)
+    val annotatedString = htmlToAnnotatedString(
+        html = text,
+        urlSpanStyle = urlSpanStyle,
+        colorMapping = colorMapping,
+        bulletChar = bulletChar,
+        indentPerLevel = indentPerLevel,
+        orderedSeparator = orderedSeparator
+    )
 
     HtmlText(
         modifier = modifier,

@@ -5,13 +5,18 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import de.charlex.compose.htmltext.example.ui.theme.HtmlTextTheme
 import de.charlex.compose.htmltext.material.HtmlText
 
@@ -21,17 +26,33 @@ class MainActivity : ComponentActivity() {
         setContent {
             HtmlTextTheme {
                 // A surface container using the 'background' color from the theme
-                Column(Modifier.background(color = MaterialTheme.colors.background)) {
+                Column(
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .background(color = MaterialTheme.colors.background)
+                        .padding(horizontal = 10.dp),
+                    verticalArrangement = spacedBy(12.dp)
+                ) {
                     Greeting()
                     StringGreeting()
                     ColorTextBySpan()
                     ColorTextByFont()
                     ColorTextWithColorMapping()
                     MultipleLinks()
-                    MultipleLinks()
                     ReturnLink()
                     ReturnLinks()
-                    UnsortedList()
+                    UnorderedList()
+
+                    FlowRow {
+                        OrderedList("a")
+                        OrderedList("A")
+                        OrderedList("i")
+                        OrderedList("I")
+                        OrderedList("1")
+                    }
+
+                    NestedLists()
+                    OrderedListVariants()
                 }
             }
         }
@@ -55,23 +76,17 @@ fun MultipleLinks() {
 
 @Composable
 fun ColorTextBySpan() {
-    HtmlText(text = "Hello <span style=\"color: #0000FF\">blue</span> world")
+    HtmlText(text = "<span style=\"color: #0000FF\">Blue</span> span color")
 }
 
 @Composable
 fun ColorTextByFont() {
-    HtmlText(text = "Hello <font color=\"#FF0000\">red</font> world")
+    HtmlText(text = "<font color=\"#FF0000\">Red</font> font color")
 }
-
-@Composable
-fun UnsortedList() {
-    HtmlText(text = "Unsorted list:<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>")
-}
-
 @Composable
 fun ColorTextWithColorMapping() {
     HtmlText(
-        text = "Hello <font color=\"#FF0000\">red</font> world",
+        text = "Replace red color in content with green: <font color=\"#FF0000\">content</font>",
         colorMapping = mapOf(Color.Red to Color.Green)
     )
 }
@@ -107,4 +122,24 @@ fun ReturnLinks() {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     )
+}
+
+@Composable
+fun UnorderedList() {
+    HtmlText(text = "Unordered<ul><li>Item</li><li>Item</li><li>Item</li></ul>")
+}
+
+@Composable
+fun OrderedList(type: String) {
+    HtmlText(text = "Ordered<ol type=\"$type\"><li>Item</li><li>Item</li><li>Item</li><li>Item</li><li>Item</li></ol>")
+}
+
+@Composable
+fun NestedLists() {
+    HtmlText(text = "Nested<ul><li>Parent<ul><li>Child</li><li>Child</li></ul></li><li>Parent</li></ul>")
+}
+
+@Composable
+fun OrderedListVariants() {
+    HtmlText(text = "Ordered variants<ol start=\"3\" type=\"1\"><li>Item</li><li>Item<ul><li>Sub</li><li>Sub</li></ul></li><li>Item</li></ol>")
 }

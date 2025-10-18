@@ -10,10 +10,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlHandler
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
 
-/**
- * HTML -> AnnotatedString converter for Compose Multiplatform
- * Supports nested <b>, <i>, <u>, <strike>, <a href=""> and now <ul><li>
- */
+
 fun htmlToAnnotatedString(
     html: String,
     urlSpanStyle: SpanStyle = SpanStyle(
@@ -21,8 +18,9 @@ fun htmlToAnnotatedString(
         textDecoration = TextDecoration.Underline
     ),
     colorMapping: Map<Color, Color> = emptyMap(),
-    bulletChar: String = "•", // konfigurierbar
-    indentPerLevel: Int = 2 // Anzahl Spaces pro Verschachtelung
+    bulletChar: String = "•",
+    indentPerLevel: Int = 2,
+    orderedSeparator: String = "."
 ): AnnotatedString {
     val builder = Builder()
 
@@ -33,10 +31,15 @@ fun htmlToAnnotatedString(
         val href: String? = null
     )
 
-    data class UlContext(var itemCount: Int)
+    data class ListContext(
+        val ordered: Boolean,
+        var itemCount: Int,
+        val startIndex: Int = 1,
+        val type: Char? = null // a, A, i, I, 1
+    )
 
     val tagStack = mutableListOf<TagInfo>()
-    val ulStack = mutableListOf<UlContext>()
+    val listStack = mutableListOf<ListContext>()
 
     fun parseColorAttr(raw: String?): Color? {
         if (raw == null) return null
@@ -53,27 +56,48 @@ fun htmlToAnnotatedString(
                     }
                 }
                 value.startsWith("rgb") -> {
-                    // rudimentäre rgb(r,g,b) Unterstützung
                     val nums = value.removePrefix("rgb(").removeSuffix(")").split(",")
                         .mapNotNull { it.trim().toIntOrNull() }
                     if (nums.size == 3) Color(nums[0], nums[1], nums[2]) else null
                 }
                 else -> null
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
 
     fun lastChar(): Char? = if (builder.length > 0) builder.toAnnotatedString().text.last() else null
 
+    fun toRoman(num: Int): String { // einfache Umsetzung bis 3999
+        if (num <= 0) return num.toString()
+        val numerals = listOf(
+            1000 to "M", 900 to "CM", 500 to "D", 400 to "CD",
+            100 to "C", 90 to "XC", 50 to "L", 40 to "XL",
+            10 to "X", 9 to "IX", 5 to "V", 4 to "IV", 1 to "I"
+        )
+        var n = num
+        val sb = StringBuilder()
+        for ((value, symbol) in numerals) {
+            while (n >= value) {
+                sb.append(symbol)
+                n -= value
+            }
+        }
+        return sb.toString()
+    }
+
+    fun formatOrdered(index: Int, type: Char?): String = when (type) {
+        'a' -> ('a' + (index - 1) % 26).toString()
+        'A' -> ('A' + (index - 1) % 26).toString()
+        'i' -> toRoman(index).lowercase()
+        'I' -> toRoman(index)
+        else -> index.toString()
+    }
+
     val ksoupHtmlParser = KsoupHtmlParser(
         handler = object : KsoupHtmlHandler {
-            override fun onOpenTag(
-                name: String,
-                attributes: Map<String, String>,
-                isImplied: Boolean
-            ) {
+            override fun onOpenTag(name: String, attributes: Map<String, String>, isImplied: Boolean) {
                 val lowerName = name.lowercase()
                 val start = builder.length
 
@@ -90,36 +114,44 @@ fun htmlToAnnotatedString(
                 val rawColor = attributes["color"]
                     ?: attributes["style"]?.substringAfter("color:", "").orEmpty()
                         .substringBefore(";").ifBlank { null }
-
                 val parsedColor = parseColorAttr(rawColor)
                 if (parsedColor != null) {
                     val mapped = colorMapping.getOrElse(parsedColor) { parsedColor }
                     style = style.merge(SpanStyle(color = mapped))
                 }
 
-                if (lowerName == "ul") {
-                    ulStack.add(UlContext(itemCount = 0))
+                if (lowerName == "ul" || lowerName == "ol") {
+                    val ordered = lowerName == "ol"
+                    val startIndex = attributes["start"]?.toIntOrNull()?.coerceAtLeast(1) ?: 1
+                    val typeAttr = attributes["type"]?.firstOrNull()?.let { ch ->
+                        if (ch in listOf('a', 'A', 'i', 'I', '1')) ch else null
+                    }
+                    listStack.add(ListContext(ordered = ordered, itemCount = 0, startIndex = startIndex, type = typeAttr))
                 }
 
                 if (lowerName == "li") {
-                    // Falls wir in einer Liste sind, Item vorbereiten
-                    val currentUl = ulStack.lastOrNull()
-                    val depth = ulStack.size // erste Ebene = 0
-                    if (currentUl != null) {
+                    val currentList = listStack.lastOrNull()
+                    val depth = listStack.size
+                    if (currentList != null) {
                         val prev = lastChar()
-                        // Neue Zeile vor jedem Item außer dem ersten innerhalb dieser Liste
-                        if (currentUl.itemCount > 0) {
+                        if (currentList.itemCount > 0) {
                             if (prev != '\n') builder.append('\n')
                         } else {
-                            // erstes Item: nur neue Zeile wenn vorheriger Text nicht bereits Zeilenumbruch ist
                             if (prev != null && prev != '\n') builder.append('\n')
                         }
-                        // Einrückung + Bullet
                         val indent = " ".repeat(depth * indentPerLevel)
                         builder.append(indent)
-                        builder.append(bulletChar)
-                        builder.append(" ")
-                        currentUl.itemCount++
+                        if (currentList.ordered) {
+                            val numberIndex = currentList.startIndex + currentList.itemCount
+                            val formatted = formatOrdered(numberIndex, currentList.type)
+                            builder.append(formatted)
+                            builder.append(orderedSeparator)
+                            builder.append(" ")
+                        } else {
+                            builder.append(bulletChar)
+                            builder.append(" ")
+                        }
+                        currentList.itemCount++
                     }
                 }
 
@@ -133,11 +165,6 @@ fun htmlToAnnotatedString(
 
             override fun onCloseTag(name: String, isImplied: Boolean) {
                 val lowerName = name.lowercase()
-                if (lowerName == "ul") {
-                    // Liste endet -> optional Zeilenumbruch falls nicht vorhanden und nächster Text folgt
-                    // Wir fügen keinen extra Umbruch am Ende hinzu, nur wenn letzter Char nicht \n
-                    // (Könnte später konfigurierbar gemacht werden)
-                }
                 val idx = tagStack.indexOfLast { it.name == lowerName }
                 if (idx != -1) {
                     val tag = tagStack.removeAt(idx)
@@ -154,8 +181,8 @@ fun htmlToAnnotatedString(
                         }
                     }
                 }
-                if (lowerName == "ul") {
-                    ulStack.removeLastOrNull()
+                if (lowerName == "ul" || lowerName == "ol") {
+                    listStack.removeLastOrNull()
                 }
             }
         }

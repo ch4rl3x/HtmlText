@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import de.charlex.compose.htmltext.core.htmlToAnnotatedString
+import kotlin.Int
 
 /**
  * Simple Text composable to show the text with html styling from string resources.
@@ -47,6 +48,9 @@ fun HtmlText(
         textDecoration = TextDecoration.Underline
     ),
     colorMapping: Map<Color, Color> = emptyMap(),
+    bulletChar: String = "•",
+    indentPerLevel: Int = 2,
+    orderedSeparator: String = ".",
     color: Color = Color.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -65,7 +69,15 @@ fun HtmlText(
     onUriClick: ((String) -> Unit)? = null,
 ) {
     val context = LocalContext.current
-    val annotatedString = htmlToAnnotatedString(context.resources.getText(textId).toString(), urlSpanStyle, colorMapping)
+
+    val annotatedString = htmlToAnnotatedString(
+        html = context.resources.getText(textId).toString(),
+        urlSpanStyle = urlSpanStyle,
+        colorMapping = colorMapping,
+        bulletChar = bulletChar,
+        indentPerLevel = indentPerLevel,
+        orderedSeparator = orderedSeparator
+    )
 
     HtmlText(
         modifier = modifier,

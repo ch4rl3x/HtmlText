@@ -154,3 +154,17 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/android,windows,macos
+/.idea/copilot.data.migration.ask.xml
+/.idea/copilot.data.migration.ask2agent.xml
+/.idea/copilot.data.migration.agent.xml
+/.idea/copilot.data.migration.edit.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/AndroidProjectSystem.xml
+/.idea/artifacts/common_jvm.xml
+
+/.idea/kotlinc.xml
+/.idea/artifacts/material_html_text_jvm.xml
+/.idea/artifacts/material3_html_text_jvm.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/runConfigurations.xml
+/.idea/copilotDiffState.xml
