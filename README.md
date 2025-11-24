@@ -1,6 +1,6 @@
 <a href="https://github.com/ch4rl3x/HtmlText/actions?query=workflow%3ABuild"><img src="https://github.com/ch4rl3x/HtmlText/actions/workflows/build.yml/badge.svg" alt="Build"></a>
 <a href="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText"><img src="https://www.codefactor.io/repository/github/ch4rl3x/HtmlText/badge" alt="CodeFactor" /></a>
-<a href="https://repo1.maven.org/maven2/de/charlex/compose/material3/material3-html-text/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose.material3/material3-html-text" alt="Maven Central" /></a> 
+<a href="https://repo1.maven.org/maven2/de/charlex/compose/material3-html-text/"><img src="https://img.shields.io/maven-central/v/de.charlex.compose/material3-html-text" alt="Maven Central" /></a> 
 
 
 # HtmlText
