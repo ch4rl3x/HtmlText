@@ -6,13 +6,13 @@ runs:
   steps:
     - uses: ./.github/workflows/actions/prepare
 
-    - name: Build material-html-text
+    - name: Build html-text-material
       shell: bash
-      run: ./gradlew :material-html-text:assembleRelease
+      run: ./gradlew :html-text-material:assembleRelease
 
-    - name: Build material3-html-text
+    - name: Build html-text-material3
       shell: bash
-      run: ./gradlew :material3-html-text:assembleRelease
+      run: ./gradlew :html-text-material3:assembleRelease
 
     - name: Build sample apps
       shell: bash

@@ -8,8 +8,7 @@ plugins {
 }
 
 mavenPublishConfig {
-    name = "material3-html-text"
-    description = "A Kotlin Multiplatform library to render HTML content as Compose AnnotatedString in Material 3, supporting basic formatting and hyperlinks."
+    description = "A Kotlin Multiplatform library to render HTML content as Compose AnnotatedString in Material, supporting basic formatting and hyperlinks."
     url = "https://github.com/ch4rl3x/HtmlText"
 
     scm {
@@ -41,10 +40,7 @@ kotlin {
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
-                implementation(compose.material3)
-                implementation(compose.components.resources)
-
-                implementation(project(":common"))
+                implementation(libs.mohamedrejeb.ksoup.html)
             }
         }
     }

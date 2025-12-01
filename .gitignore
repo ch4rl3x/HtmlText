@@ -163,8 +163,13 @@ $RECYCLE.BIN/
 /.idea/artifacts/common_jvm.xml
 
 /.idea/kotlinc.xml
-/.idea/artifacts/material_html_text_jvm.xml
-/.idea/artifacts/material3_html_text_jvm.xml
+/.idea/artifacts/html_text_common_jvm.xml
+/.idea/artifacts/html_text_material_jvm.xml
+/.idea/artifacts/html_text_material3_jvm.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/runConfigurations.xml
 /.idea/copilotDiffState.xml
+
+/.idea/markdown.xml
+/.idea/migrations.xml
+/.idea/misc.xml
