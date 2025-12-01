@@ -8,7 +8,6 @@ plugins {
 }
 
 mavenPublishConfig {
-    name = "material-html-text"
     description = "A Kotlin Multiplatform library to render HTML content as Compose AnnotatedString in Material, supporting basic formatting and hyperlinks."
     url = "https://github.com/ch4rl3x/HtmlText"
 
