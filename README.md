@@ -8,7 +8,7 @@
 `HtmlText` is a Kotlin Multiplatform library that allows you to render HTML content as Compose `AnnotatedString`s. It supports basic formatting, hyperlinks, and color styling in a multiplatform-friendly way. `HtmlText` has been made accessible for screen readers and keyboard operation.
 
 > [!WARNING]  
-> Starting with version 3.0.0-beta01, the Maven GroupId has changed to `de.charlex.compose`
+> Starting with version 3.0.0-beta02, the Maven GroupId has changed to `de.charlex.compose` and artifact names changed from `material-html-text` to `html-text-material`.
 
 > [!NOTE]  
 > 🚀 HtmlText is now Compose Multiplatform
@@ -56,7 +56,7 @@ Add actual HtmlText library:
 
 ```groovy
 dependencies {
-    implementation 'de.charlex.compose:material-html-text:3.0.0-beta01'
+    implementation 'de.charlex.compose:html-text-material:3.0.0-beta02'
 }
 ```
 
@@ -64,14 +64,14 @@ or
 
 ```groovy
 dependencies {
-    implementation 'de.charlex.compose:material3-html-text:3.0.0-beta01'
+    implementation 'de.charlex.compose:html-text-material3:3.0.0-beta02'
 }
 ```
 
 License
 --------
 
-    Copyright 2021 Alexander Karkossa
+    Copyright 2025 Alexander Karkossa
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
