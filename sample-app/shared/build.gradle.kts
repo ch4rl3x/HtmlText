@@ -23,8 +23,8 @@ kotlin {
                 implementation(compose.material)
                 implementation(compose.material3)
 
-                implementation(project(":material-html-text"))
-                implementation(project(":material3-html-text"))
+                implementation(projects.htmlTextMaterial)
+                implementation(projects.htmlTextMaterial3)
             }
         }
     }
@@ -37,5 +37,3 @@ kotlin {
         }
     }
 }
-
-

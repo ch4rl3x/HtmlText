@@ -21,8 +21,10 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "HtmlText"
-include(":material-html-text")
-include(":material3-html-text")
-include(":common")
+include(':html-text-material')
+include(':html-text-material3')
+include(':html-text-common')
 include(":sample-app:shared")
 include(":sample-app:android-app")
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

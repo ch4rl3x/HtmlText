@@ -45,7 +45,7 @@ kotlin {
                 implementation(compose.material)
                 implementation(compose.components.resources)
 
-                implementation(project(":common"))
+                implementation(project(":html-text-common"))
             }
         }
     }
