@@ -19,7 +19,7 @@ ksp = "2.2.20-2.0.3"
 #composeCompiler = "1.5.8.1"
 
 # https://developer.android.com/jetpack/androidx/releases/activity
-androidxActivity = "1.11.0"
+androidxActivity = "1.12.2"
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 androidxAppCompat = "1.7.1"
 coreKtx = "1.17.0"
