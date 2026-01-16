@@ -6,7 +6,7 @@ minSdk = "21"
 
 jvmTarget = "17"
 # https://developer.android.com/build/releases/gradle-plugin#compatibility
-agp = "8.11.2"
+agp = "9.0.0"
 
 #https://github.com/JetBrains/compose-multiplatform
 compose-multiplatform = "1.9.0"
