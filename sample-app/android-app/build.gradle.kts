@@ -12,7 +12,7 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.core.ktx)
                 implementation(libs.androidx.appcompat)
-                implementation("com.google.android.material:material:1.10.0")
+                implementation("com.google.android.material:material:1.13.0")
 
 //                implementation(compose.runtime)
 //                implementation(compose.foundation)
